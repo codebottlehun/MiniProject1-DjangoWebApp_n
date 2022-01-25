@@ -1,0 +1,24 @@
+#contents-main{
+    height: 92%;
+    margin: 4%;
+    display: none;
+}
+
+#sidebar-wrapper {
+    z-index: 100;
+    width: 0px;
+
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    transition: all 0.5s ease;
+}
+
+#sidebar-wrapper2 {
+    z-index: 100;
+    width: 0px;
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    transition: all 0.5s ease;
+}

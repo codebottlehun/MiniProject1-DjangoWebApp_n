@@ -1,0 +1,50 @@
+{% extends "codagram/layout.html" %}
+
+{% block content %}
+<div id="wrapper" class="d-flex flex-row">
+
+    <div id="sidebar-wrapper" class="sticky-top">
+        <div style="height:150px;"></div>
+        <div class="card card-body border-0" style="width: 150px;" >
+            {% for i in 123456789|make_list %}
+                <button type="button" class="btn btn-primary px-1 my-1 mx-1" style="font-size: 0.7rem;">
+                    Language{{ i }}
+                    <span class="badge bg-secondary">4</span>
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="page-content-wrapper" class="flex-fill px-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    {% for post in post_list %}
+                        <div class="mb-3">
+                            {% comment %} put in post_card {% endcomment %}
+                        </div>
+                    {% empty %}
+                        포스팅이 없습니다.
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar-wrapper2" class="sticky-top" >
+        <div id="profileView-margin" style="height:100px;"></div>
+        <div class="card card-body" style="width: 300px;">
+            {% include "member/mypage.html" %}
+        </div>
+    </div>
+</div>
+
+<div id="contents-bg" class="fixed-top min-vw=100 min-vh-100 bg-dark" style="z-index:101; opacity:0.5; display:none;"></div>
+<div id="contents-main" class="fixed-top bg-light rounded">
+    <div>
+        <div class="align-self-center">
+
+        </div>
+    <div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+django~=3.1.11
+
+django-extensions
+django-debug-toolbar
+django-bootstrap-v5
+django-pydenticon
+django-ckeditor
+
+
+pillow
+easy-thumbnails

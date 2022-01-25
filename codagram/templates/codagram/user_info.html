@@ -1,0 +1,23 @@
+{% load thumbnail %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <div class="card-header">
+            <img src="{{ request.user.avatar_url }}" style="width: 32px; height: 32px;" />
+            <a>
+                {{ request.user.username }}
+            </a>
+        </div>
+        <div class="card-body">
+            <div>
+                <a href="" class="btn btn-primary">새 포스팅 쓰기</a>
+            </div>
+        </div>
+    {% else %}
+        <div>
+            <div>
+                <button id="new-post" class="btn btn-primary">새 포스팅 쓰기</button>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

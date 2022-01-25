@@ -1,0 +1,152 @@
+{% load bootstrap5 %}
+{% block content %}
+
+{% csrf_token %}
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <h6 class="border-bottom pb-2 mb-0">내가 쓴 글</h6>
+        {% for wri_data in wri_info %}
+            <div class="d-flex text-muted pt-3 ">
+                <p class="pb-3 mb-0 small lh-sm border-bottom col-11">
+                    <strong class="d-block text-gray-dark">@{{wri_data.author}}
+                        {% if wri_data.solved %}
+                            <span class="badge bg-success">Success</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Warning</span>
+                        {% endif %}
+
+                    </strong>
+                    {{wri_data.title}}
+                </p>
+                <small class="d-block text-end mt-3 col">
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalChoice">Del</button>
+
+                    <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content rounded-4 shadow">
+                                <div class="modal-body p-4 text-center">
+                                    <h5 class="mb-0">Commemt Delete</h5>
+                                    <p class="mb-0">댓글을 정말 삭제하겠습니까?</p>
+                                </div>
+                                <div class="modal-footer flex-nowrap p-0">
+                                    <button
+                                        type="button"
+                                        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-right">
+                                        <strong>
+                                            <a href="/mypage/delete/?text_type=0&id={{ wri_data.id }}">네</a>
+                                        </strong>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0"
+                                        data-bs-dismiss="modal">아니요</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </small>
+            </div>
+        {% endfor %}
+
+        <div style='text-align:center'>
+            <ul class='pagination'>
+                {% for i in wri_range %}
+                    <li>
+                        <a href='{% url "member:mypage" %}?page={{ i }}'>
+                            {{ i }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <small class="d-block text-end mt-3">
+            <a href="#">All updates</a>
+        </small>
+    </div>
+
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <h6 class="border-bottom pb-2 mb-0">내가 단 답글</h6>
+        {% for com_data in com_info %}
+            <div class="d-flex text-muted pt-3 ">
+                <p class="pb-3 mb-0 small lh-sm border-bottom col-11">
+                    <strong class="d-block text-gray-dark">@{{com_data.author}}
+                        {% if com_data.write.solved %}
+                            <span class="badge bg-success">Success</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Warning</span>
+                        {% endif %}
+
+                    </strong>
+                    {{com_data.write.title}}
+                </p>
+                <small class="d-block text-end col">
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalChoice">Del</button>
+
+                    <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content rounded-4 shadow">
+                                <div class="modal-body p-4 text-center">
+                                    <h5 class="mb-0">Commemt Delete</h5>
+                                    <p class="mb-0">댓글을 정말 삭제하겠습니까?</p>
+                                </div>
+                                <div class="modal-footer flex-nowrap p-0">
+                                    <button
+                                        type="button"
+                                        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-right">
+                                        <strong>
+                                            <a href="/mypage/delete/?text_type=0&id={{ com_data.id }}">네</a>
+                                        </strong>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0"
+                                        data-bs-dismiss="modal">아니요</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </small>
+            </div>
+        {% endfor %}
+
+        <div style='text-align:center'>
+            <ul class='pagination'>
+                {% for i in com_range %}
+                    <li>
+                        <a href='{% url "member:mypage" %}?page={{ i }}'>
+                            {{ i }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <small class="d-block text-end mt-3">
+            <a href="#">All updates</a>
+        </small>
+    </div>
+
+<script>
+    {% comment %}document
+            .getElementByName("a")
+            .addEventListener("click", (e) => {
+                e.preventDefault();
+                alert("클릭1");
+            });
+        document
+            .getElementByName("b")
+            .addEventListener("click", (e) => {
+                e.preventDefault();
+                alert("클릭2");
+            });{% endcomment %}
+</script>
+{% endblock %}

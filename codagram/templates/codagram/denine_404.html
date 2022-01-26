@@ -1,0 +1,21 @@
+{% extends "codagram/layout.html" %}
+
+{% block content %}
+    <div id="notfound">
+        <div class="notfound">
+            <div class="notfound-404">
+                {% if main %}
+                    <h1>{{ main }}</h1>
+                {% else %}
+                    <h1>Oops!</h1>
+                {% endif %}
+
+            </div>
+            <h2>{{ title }}</h2>
+            <p>{{ message }}</p>
+            {% if btn %}
+                <a href="{% url "codagram:index" %}">Go To Homepage</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

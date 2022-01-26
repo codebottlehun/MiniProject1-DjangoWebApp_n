@@ -2,22 +2,18 @@
 
 {% block content %}
     {% if request.user.is_authenticated %}
-        <div class="card-header">
-            <img src="{{ request.user.avatar_url }}" style="width: 32px; height: 32px;" />
-            <a>
-                {{ request.user.username }}
-            </a>
-        </div>
-        <div class="card-body">
+        <div class="card-header bg-dark d-flex justify-content-end align-items-center">
+            
+            <div class="me-3 mt-1">
+                <a class="text-decoration-none fw-bolder" style="color:rgb(255,255,255); font-size:1.2em;">
+                    {{ request.user.username }}
+                </a>
+            </div>
             <div>
-                <a href="" class="btn btn-primary">새 포스팅 쓰기</a>
+                <img src="{% url "pydenticon_image" request.user.username %}" class="rounded" style="width: 32px; height: 32px;" />
             </div>
         </div>
     {% else %}
-        <div>
-            <div>
-                <button id="new-post" class="btn btn-primary">새 포스팅 쓰기</button>
-            </div>
-        </div>
+        
     {% endif %}
 {% endblock %}

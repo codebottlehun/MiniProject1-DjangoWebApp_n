@@ -9,7 +9,7 @@ class User(AbstractUser) :
 		(0, 'Aibler'),
         (1, 'Tutor'),
     )
-    user_type = models.IntegerField(choices=NATIONAL_CHOICES) # user_type select form
+    user_type = models.IntegerField(choices=NATIONAL_CHOICES, default=0) # user_type select form
     nickname = models.CharField(blank=True, max_length=50)
     user_photo = models.ImageField(blank=True)
     @property

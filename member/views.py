@@ -41,7 +41,7 @@ def signup(request):
     })
 
 def logout(request) :
-    return logout_then_login(request)
+    return logout_then_login(request, login_url='')
 
 
 def my_paper(request) :

@@ -6,74 +6,45 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title></title>
+        <link href="{% static "style.css" %}" rel="stylesheet">
         <link
             rel="stylesheet"
             href="{% static "bootstrap-5.1.3-dist/css/bootstrap.min.css" %}"/>
         <script src="{% static "jquery-3.6.0.min.js" %}"></script>
         <script src="{% static "bootstrap-5.1.3-dist/js/bootstrap.min.js" %}"></script>
-        <script> const contentsView = false;</script>
         <!-- Custom CSS -->
         <link href="{% static "layout-side.css" %}" rel="stylesheet">
+        <link href="{% static "oops.css" %}" rel="stylesheet">
     </head>
-    <body>
-
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                    <div class="alert alert-{{ message.tags }}" style="z-index: 101;">
-                        {{ message }}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-
+    <body class="bg-white">
         <header class="container pt-3 bg-white" >
-            <div
-                class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+            <div class="d-flex flex-column flex-md-row align-items-center pb-3 border-bottom">
                 <a
-                    {% comment %} Put in root {% endcomment %}
-                    href="codagram/"
-                    class="d-flex me-auto align-items-center text-dark text-decoration-none">
+                    href="{% url "codagram:index" %}"
+                    class="d-flex align-items-center text-dark text-decoration-none">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
                         height="30"
-                        fill="rgb(191, 64, 191)"
+                        fill="rgb(0, 0, 50)"
                         class="bi bi-code-square mt-1 mx-2"
-                        viewbox="0 0 16 16">
+                        viewbox="0 0 16 16"
+                        >
                         <path
                             d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                         <path
                             d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z"/>
                     </svg>
-                    <span class="fs-4 text-secondary">Codagram</span>
+
+                    <span class="fs-4 text-dark">Codagram</span>
                 </a>
 
-                <form class="d-flex mt-md-0" style="width: 280px;">
-                    <input
-                        class="form-control me-2"
-                        type="search"
-                        placeholder=""
-                        aria-label="Search">
-                    <button class="btn btn-outline-secondary" type="submit">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            fill="currentColor"
-                            class="bi bi-search"
-                            viewbox="0 0 16 16">
-                            <path
-                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                        </svg>
-                    </button>
-                </form>
-
-                <div class="d-flex flex-row ms-auto mt-2 mt-md-0">
+                <div class="d-flex flex-row ms-md-auto mt-2 mt-md-0">
+                    
                     {% if request.user.is_authenticated %}
                         {% comment %} Put in logout {% endcomment %}
-                        <a href="/member/logout/" role="button" class="btn btn-light text-dark me-2">Logout</a>
-                        <a role="button" type="button" class="btn btn-primary position-relative me-2">
+                        <a role="button" type="button" class="btn btn-secondary position-relative me-2">
+                            &nbsp&nbsp
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="20"
@@ -87,156 +58,255 @@
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 10
-                                <span class="visually-hidden">unread messages</span>
                             </span>
+                            &nbsp&nbsp
+                        </a>
+
+                        <a href="/member/logout/" role="button" class="btn btn-dark text-dark me-2">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                fill="rgb(255,255,255)"
+                                class="bi bi-box-arrow-right"
+                                viewBox="0.2 1 15 15">
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            </svg>
                         </a>
                     {% else %}
                         {% comment %} Put in login, singup {% endcomment %}
-                        <a href="/member/login/" role="button" class="btn btn-light text-dark me-2">Login</a>
-                        <a href="/member/signup/" role="button" type="button" class="btn btn-primary me-2">Sign-up</a>
+                        
+                        <a href="/member/signup/" role="button" type="button" class="btn btn-primary me-2">
+                            &nbsp&nbsp
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                fill="rgb(255,255,255)"
+                                class="bi bi-person-plus-fill"
+                                viewBox="0.4 1 15 15">
+                                <path
+                                    d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                            &nbsp&nbsp
+                        </a>
+                        <a href="/member/login/" role="button" class="btn btn-dark text-dark me-2">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                fill="rgb(255,255,255)"
+                                class="bi bi-box-arrow-in-left"
+                                viewBox="0.2 1 15 15">
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                            </svg>
+                        </a>
                     {% endif %}
-                    
+                    <!--  style="background-color:rgb(13,110,223)" -->
+                    <button id="searchBtn" class="btn btn-dark">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            fill="rgb(255,255,255)"
+                            class="bi bi-search"
+                            viewbox="0 0 16 16">
+                            <path
+                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="searchBox" class="d-flex bg-light" style="opacity:0.8;">
+                <div class="d-flex ms-auto">
+                    <form class="d-flex p-1" style="width: 280px;" actiom="" method="get">
+                        <input
+                            class="form-control ms-auto"
+                            type="text"
+                            name="q"
+                            placeholder=""
+                            aria-label="Search">
+                        <button class="btn ms-2 btn-outline-dark" type="submit">
+                            SEARCH
+                        </button>
+                    </form>
                 </div>
             </div>
         </header>
 
-        <div style="height:0px"></div>
+            
+        </div>
 
-        <main class='container'>
-            {% block content %}
-            {% endblock %}
+        <main class='container mt-4'>
+            <div id="wrapper" class="d-flex flex-row">
+                <div id="sidebar-wrapper" class="sticky-top">
+                    <div style="height:150px;"></div>
+                    <div class="card card-body border-0" style="width: 150px;" >
+                        {% for i in 123456789|make_list %}
+                            <button type="button" class="btn btn-dark px-1 my-1 mx-1" style="font-size: 0.7rem;">
+                                Language{{ i }}
+                                <span class="badge bg-secondary">4</span>
+                            </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            
+                <div id="page-content-wrapper" class="flex-fill px-2">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                {% block content %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div id="sidebar-wrapper2" class="sticky-top" >
+                    <div id="profileView-margin" style="height:100px;"></div>
+                    
+                    <div class="card card-body " style="width: 300px;">
+                        {% include "codagram/user_info.html" %}
+                        {% include "member/profile.html" %}
+                        <div class="d-flex">
+                            <div class="d-flex p-1 justify-content-center border-0">
+                                <div >
+                                    <button id="new-post" class="btn btn-primary bg-gradient " style="opacity:0.8">새 포스팅 쓰기</button>
+                                </div>
+                            </div>
+                            <div class="d-flex p-1 justify-content-center border-0" style="opacity:0.9">
+                                <div >
+                                    <button id="new-post" class="btn btn-warning bg-gradient" style="font-color:rgb(0,0,0);">
+                                        <a class="text-decoration-none" style="color:rgb(255,255,255); ">
+                                        신규 강좌 개설
+                                        </a>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div id="contents-bg" class="fixed-top min-vw=100 min-vh-100 bg-dark" style="z-index:101; opacity:0.5; display:none;"></div>
+            <div id="contents-main" class="fixed-top bg-light rounded">
+                <div>
+                    <div class="align-self-center">
+            
+                    </div>
+                <div>
+            </div>
         </main>
 
 
-<div class="border-top mt-3">
-    <div class="container">
-        <footer class="pt-4 my-md-5 pt-md-5">
-            <div class="row">
-                <div class="col-12 col-md">
-                    <small class="d-block mb-3 text-muted">© 2017-2019</small>
+    <div class="mb-auto mt-auto border-top mt-3 border-top">
+        <div class="container ">
+            <footer class="pt-4 md-5">
+                <div class="row">
+                    <div class="col-12 col-md">
+                        <small class="d-block mb-3 text-muted">©2022 KT AIVLE#1 수도권 2반 - 1조</small>
                     </div>
-                    <div class="col-6 col-md">
-                        <h5>Features</h5>
-                        <ul class="list-unstyled text-small">
-                            <li>
-                                <a class="text-muted" href="#">Cool stuff</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Random feature</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Team feature</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Stuff for developers</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Another one</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Last time</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-6 col-md">
-                        <h5>Resources</h5>
-                        <ul class="list-unstyled text-small">
-                            <li>
-                                <a class="text-muted" href="#">Resource</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Resource name</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Another resource</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Final resource</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-6 col-md">
-                        <h5>About</h5>
-                        <ul class="list-unstyled text-small">
-                            <li>
-                                <a class="text-muted" href="#">Team</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Locations</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Privacy</a>
-                            </li>
-                            <li>
-                                <a class="text-muted" href="#">Terms</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </footer>
-        </div>
+                </footer>
+            </div>
     </div>
-<script>
+
+    <script>
     $(function () {
         //Keep track of last scroll
         var submenuHide = false;
-        
-        var nontarget = ['/member'];
+        var searchOff = false;
+        var nontarget = ['/member/', '/post/', '/denine/'];
         nontarget.forEach(function(item) {
+            console.log(item);
             if(window.location.pathname.indexOf(item) != -1){
                 submenuHide = true;
+                if(window.location.pathname.indexOf("/denine/") != -1){
+                    searchOff = true;
+                }
             }
         });
 
         if ( window.location.pathname == '/codagram/' ){ 
-            $("#sidebar-wrapper").css("width", "150px");
+            //$("#sidebar-wrapper").css("width", "150px");
             {% if request.user.is_authenticated %}
                 $("#sidebar-wrapper2").css("width", "300px");
             {% endif %}
-            // 오징어
-            $("#sidebar-wrapper2").css("width", "300px");
         }
 
         var lastScroll = 0;
-        {% if request.user.is_authenticated %}
-            $("#sidebar-wrapper").css("width", "150px");
-            $("#sidebar-wrapper2").css("width", "300px");
-        {% endif %}
-        $(window).scroll(function (e) {
-            if(submenuHide){
 
+        {% if DontShowSide %}
+            submenuHide = true;
+            $("#sidebar-wrapper2").css("width", "0px");
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+            if(submenuHide == false){
+                //$("#sidebar-wrapper").css("width", "150px");
+                $("#sidebar-wrapper2").css("width", "300px");
             }
-            else{
-                let st = $(this).scrollTop();
-                if (st > lastScroll) {
-                    if ($("#sidebar-wrapper").css("width") == "150px") {
-                        $("#sidebar-wrapper").css("width", "0px");
-                        $("#sidebar-wrapper2").css("width", "0px");
-                    }
-                } else {
-                    if ($("#sidebar-wrapper").css("width") == "0px") {
-                        $("#sidebar-wrapper").css("width", "150px");
+        {% endif %}
+        
+        $(window).bind('mousewheel', function(event) {
+            if(submenuHide == false){
+                if (event.originalEvent.wheelDelta >= 0) {
+                    if ($("#sidebar-wrapper").css("width").replace('px','') < 100) {
+                        //$("#sidebar-wrapper").css("width", "150px");
                         {% if request.user.is_authenticated %}
                             $("#sidebar-wrapper2").css("width", "300px");
                         {% endif %}
-                        // 오징어
-                        $("#sidebar-wrapper2").css("width", "300px");
                     }
                 }
-                lastScroll = st;
+                else {
+                    if ($("#sidebar-wrapper2").css("width").replace('px','') > 100) {
+                        $("#sidebar-wrapper").css("width", "0px");
+                        $("#sidebar-wrapper2").css("width", "0px");
+                    }
+                }
             }
         });
+        
+        
+        document.getElementById("searchBtn").addEventListener("click", javascript_onclik_searchBtn);
+        var searchBtn_On = false;
+        function javascript_onclik_searchBtn(){
+            if(!searchOff){
+                if (searchBtn_On){
+                    $("#searchBox").css("height", "0px");
+                    $("#searchBtn").attr('class', 'btn btn-dark');
+                    searchBtn_On = false;
+                }
+                else{
+                    $("#searchBox").css("height", "3em");
+                    $("#searchBtn").attr('class', 'btn btn-secondary');
+                    searchBtn_On = true;
+                }
+            }
+        }
 
-        $(document).ready(function () {
-            document.getElementById("new-post").addEventListener("click", javascript_onclikc);
-            function javascript_onclikc(){
-                $("#contents-bg").css("display", "inline");
-                $("#contents-main").css("display", "inline");
-            }
-        });
+        //document.getElementById("new-post").addEventListener("click", javascript_onclikc);
+        //function javascript_onclikc(){
+        //    $("#contents-bg").css("display", "inline");
+        //    $("#contents-main").css("display", "inline");
+        //}
+
 
     });
-</script>
+    </script>
 
 </body>
 

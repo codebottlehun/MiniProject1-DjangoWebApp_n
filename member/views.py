@@ -1,10 +1,7 @@
 from django.shortcuts import render, redirect
-from django.urls import is_valid_path
-from importlib_metadata import email
-from .models import User, Write, Comment
+from .models import Alarm
+from post.models import Post, Comment
 from .forms import SignupForm
-from django.utils import timezone
-from django.http import HttpResponse, request
 from django.core.paginator import Paginator
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import AuthenticationForm
@@ -13,8 +10,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import (
     LoginView, logout_then_login
 )
-
-# login = LoginView.as_view(template_name="member/login_form.html")
 
 def login(request) :
     if request.method == 'POST' :
@@ -51,30 +46,30 @@ def logout(request) :
 
 def my_paper(request) :
     # 내가 쓴 글 리스트업 작업
-    wri_page = request.GET.get('wri_page', 1)
+    post_page = int(request.GET.get('wri_page', 1))
 
     id = request.user.get_username()
-    write = Write.objects.filter(author = id)
+    post = Post.objects.filter(author = id)
 
-    write.order_by('-update_time', '-make_time')
+    post.order_by('-register_date')
 
-    write_p = Paginator(write, 5)
-    wri_info = write_p.page(wri_page)
+    post_p = Paginator(post, 5)
+    post_data = post_p.page(post_page)
 
-    wri_start_page = (wri_page -1) //5 *5 + 1
-    wri_end_page = wri_start_page + 4
-    if wri_end_page > write_p.num_pages :
-        wri_end_page = write_p.num_pages
+    post_start_page = (post_page -1) //10 *10 + 1
+    post_end_page = post_start_page + 9
+    if post_end_page > post_p.num_pages :
+        post_end_page = post_p.num_pages
 
     # 내가 쓴 글 리스트업 작업
     com_page = request.GET.get('com_page', 1)
 
     comment = Comment.objects.filter(author = id)
 
-    comment.order_by('-make_time','-update_time')
+    comment.order_by('-register_date')
 
     com_p = Paginator(comment, 5)
-    com_info = com_p.page(com_page)
+    com_data = com_p.page(com_page)
 
     com_start_page = (com_page -1) //5 *5 + 1
     com_end_page = com_start_page + 4
@@ -82,10 +77,12 @@ def my_paper(request) :
         com_end_page = com_p.num_pages
 
     context = {
-        'wri_info' : wri_info, 
-        'wri_range' : range(wri_start_page, wri_end_page),
-        'com_info' : com_info, 
-        'com_range' : range(com_start_page, com_end_page)
+        'post_data' : post_data, 
+        'post_range' : range(post_start_page, post_end_page),
+        'com_data' : com_data, 
+        'com_range' : range(com_start_page, com_end_page),
+        'post_page' : post_page, 
+        'com_page' : com_page,
     }
 
     return context
@@ -102,25 +99,25 @@ def delete(request) :
     text_type = request.GET.get('text_type')
     id = request.GET.get('id')
     
-    if text_type == 1 :
-        data = Comment.objects.filter(id=id)
+    if text_type == "1" :
+        data = Comment.objects.get(id=id)
 
-    else :
-        data = Write.objects.filter(id=id)
+    elif text_type == "0" :
+        data = Post.objects.get(id=id)
     
     if data.author == request.user.get_username() :
         data.delete()
 
     return redirect('member:mypage')
 
-# def alarm(request) :
-#     # 사용자의 알람을 조회하는 기능
+def alarm(request) :
+    # 사용자의 알람을 조회하는 기능
+    alarm = Alarm.objects.filter(user = request.user.id)
+    return alarm
 
-#     user = User.objects.filter(username=request.user.get_username())
-#     alarm = Alarm.objects.filter(user = user)
-    
-#     context = {
-#         'alarm' : alarm
-#     }
-
-#     return alarm
+def search(request, keyword) :
+    # 검색 기능
+    result = []
+    for word in keyword.split(' ') :
+        result.append(Post.objects.filter(subject__contains=word))
+    return result

@@ -2,7 +2,6 @@
 
 {% block content %}
 <div id="wrapper" class="d-flex flex-row">
-
     <div id="sidebar-wrapper" class="sticky-top">
         <div style="height:150px;"></div>
         <div class="card card-body border-0" style="width: 150px;" >
@@ -19,13 +18,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    {% for post in post_list %}
-                        <div class="mb-3">
-                            {% comment %} put in post_card {% endcomment %}
-                        </div>
-                    {% empty %}
-                        포스팅이 없습니다.
-                    {% endfor %}
+                    
                 </div>
             </div>
         </div>

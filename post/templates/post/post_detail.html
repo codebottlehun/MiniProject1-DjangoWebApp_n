@@ -18,16 +18,16 @@
   </div>
   <div class="border border-5">
     <div class="row">
-            <div class="col">
-                <div style="margin-left:10px; flex: 0 1 auto;">
+            <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%">
+                <div style="margin-left:2%; margin-right:2%">
                 <h5 class="border-bottom my-3 py-2">
                     {{post.comment_set.count}}개의 답변이 있습니다.
                 </h5>
                     {{ post.content|safe }}
                 </div>
             </div>
-            <div class="col">
-                <div style="margin-right:10px; flex: 0 1 auto;">
+            <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%">
+                <div style="margin-left:2%; margin-right:2%">
                     <ul class="nav nav-tabs border-bottom my-3">
                         {% for comment in post.comment_set.all %}
                             {% if forloop.first %}
@@ -90,7 +90,7 @@
                         {% endfor %}
                     </ul>
 
-                    <div class="tab-content" id='menu'>
+                    <div class="tab-content" id='menu' style="overflow:auto; width:100%">
                         <div class="tab-pane container active">
                             <p>{{post.comment_set.all.0.content}}</p>
                         </div>

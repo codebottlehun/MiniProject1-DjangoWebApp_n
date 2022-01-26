@@ -84,6 +84,11 @@ def post_update(request, post_id):
     else:
         return redirect('post:detail', post_id=post.id)
 
+@login_required
+def post_delete(request, post_id):
+    post = Post.objects.get(id=post_id)
+    post.delete()
+    return redirect('post:index')
 
 def comment_get(request):
     author = request.GET.get('username')

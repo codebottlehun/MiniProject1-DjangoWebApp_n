@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     #local apps
     'codagram',
     'member', # Jeon_SH
+    'post', #JHS
 
 ]
 
@@ -111,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -132,3 +133,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Media settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+ALLOWED_HOSTS = ['*']

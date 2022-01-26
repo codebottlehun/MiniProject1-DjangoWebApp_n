@@ -1,0 +1,39 @@
+{% extends "codagram/layout.html" %}
+{% block content %}
+<div class="container mt-3">
+    <table class="table table-dark table-hover">
+      <thead>
+        <tr>
+          <th>작성일시</th>
+          <th>번호</th>
+          <th>제목</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if post_list %}
+        {% for post in post_list %}
+        <tr>
+          <td>{{ post.register_date }}</td>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            <a href="{% url 'post:detail' post.id %}">
+              {{ post.subject }} 
+              <span class='badge badge-warning'>number
+                {{ post.comment_set.count }}
+              </span>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td colspan="3">질문이 없습니다.</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+    <a href="{% url 'post:post_create' %}" class="btn btn-primary">
+      질문 등록하기
+    </a>
+  </div>
+{% endblock %}

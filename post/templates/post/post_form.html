@@ -1,0 +1,28 @@
+{% extends "codagram/layout.html" %}
+{% block content %}
+<div class="container pt-5">
+  <h5 class="my-3 border-bottom pb-2">게시글 작성</h5>
+  <form method="post" class="post-form my-3">
+    {% csrf_token %}
+    <!-- 오류표시 Start -->
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      {% for field in form %}
+        {% if field.errors %}
+          <strong>{{ field.label }}</strong>
+          {{ field.errors }}
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    <!-- 오류표시 End -->
+    
+    <div class="form-group">
+        {{form.media}}
+        {%csrf_token%}
+        {{form.as_p}}
+    </div>
+    <button type="submit" class="btn btn-primary">저장하기</button>
+  </form>
+</div>
+{% endblock %}

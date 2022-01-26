@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('codagram/', include('codagram.urls')),
     path('member/', include('member.urls')),
+    path('post/', include('post.urls')),
     re_path('', RedirectView.as_view(pattern_name='codagram:index'), name='root'),
 
     #project app

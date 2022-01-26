@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.forms import DateTimeField, DateTimeInput, IntegerField
+from sqlalchemy import ForeignKey
 
 
 class User(AbstractUser) :
@@ -35,3 +37,8 @@ class Comment(models.Model) :
     write = models.ForeignKey(
         Write, on_delete=models.SET_NULL, null=True
     )
+
+# class Alarm(models.Model) :
+#     write = ForeignKey(Write, on_delete=models.SET_NULL)
+#     user = ForeignKey(User, on_delete=models.SET_NULL)
+#     check_time = DateTimeField(blank=True)

@@ -3,7 +3,12 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser) :
-    user_type = models.IntegerField(default=0)
+    # user_type select opsion
+    NATIONAL_CHOICES = (
+		(0, 'Aibler'),
+        (1, 'Tutor'),
+    )
+    user_type = models.IntegerField(choices=NATIONAL_CHOICES) # user_type select form
     nickname = models.CharField(blank=True, max_length=50)
     user_photo = models.ImageField(blank=True)
 

@@ -7,13 +7,29 @@ from django.utils import timezone
 from django.http import HttpResponse, request
 from django.core.paginator import Paginator
 from django.contrib.auth import login as auth_login
+from django.contrib.auth.forms import AuthenticationForm
 
 #bottle - django 
 from django.contrib.auth.views import (
     LoginView, logout_then_login
 )
 
-login = LoginView.as_view(template_name="member/login_form.html")
+# login = LoginView.as_view(template_name="member/login_form.html")
+
+def login(request) :
+    if request.method == 'POST' :
+        form = AuthenticationForm(request, data = request.POST)
+        if form.is_valid() :
+            auth_login(request, form.get_user())
+            return redirect('codagram:index')
+    else :
+        form = AuthenticationForm()
+
+    context = {
+        'form' : form,
+    }
+    return render(request, 'member/login_form.html', context)
+
 
 def signup(request):
     if request.method == 'POST':
@@ -33,13 +49,13 @@ def logout(request) :
     return logout_then_login(request)
 
 
-def my_page(request) :
+def my_paper(request) :
     # 내가 쓴 글 리스트업 작업
     wri_page = request.GET.get('wri_page', 1)
 
     #최신순 정렬이 필요해보입니다.
 
-    id = request.session['user_name']
+    id = request.user.get_username()
     write = Write.objects.filter(author = id)
 
     write_p = Paginator(write, 5)
@@ -70,17 +86,25 @@ def my_page(request) :
         'com_range' : range(com_start_page, com_end_page)
     }
 
+    return context
+
+def my_page(request) :
+
+    context = my_paper(request)
+
     return render(request, 'member/mypage.html', context)
 
 def delete(request) :
     text_type = request.GET.get('text_type')
     id = request.GET.get('id')
     
-    if text_type :
+    if text_type == 1 :
         data = Comment.objects.filter(id=id)
+
     else :
         data = Write.objects.filter(id=id)
     
-    data.delete()
-
+    if data.author == request.user.get_name() :
+        data.delete()
+        
     return redirect('member:mypage')

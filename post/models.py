@@ -1,8 +1,9 @@
 from email.policy import default
 from django.db import models
 from ckeditor.fields import RichTextField
+from member.models import User
 class Post(models.Model):
-    author = models.CharField(max_length=200, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     subject = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     content = RichTextField()
@@ -13,7 +14,7 @@ class Post(models.Model):
         return self.subject
 
 class Comment(models.Model):
-    author = models.CharField(max_length=200, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = RichTextField()
     register_date = models.DateTimeField()

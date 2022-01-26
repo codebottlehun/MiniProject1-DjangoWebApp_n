@@ -21,10 +21,13 @@ def detail(request, post_id):
 
 def comment_create(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
+    #author = request.GET.get('username')
+    #c = Comment.objects.get(author=author)
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
+            comment.user = request.user
             #comment.author = request.session['user_id'] JBH
             comment.author = request.user.username
             comment.register_date = timezone.now()
@@ -42,6 +45,7 @@ def post_create(request):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
+            post.user = request.user
             #post.author = request.session['user_id'] JBH
             post.author = request.user.username
             post.register_date = timezone.now()

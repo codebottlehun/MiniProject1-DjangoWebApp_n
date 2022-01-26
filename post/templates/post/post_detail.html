@@ -1,7 +1,7 @@
 
 {% extends "codagram/layout.html" %}
 {% block content %}
-
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <div class="container mt-3">
   <div class="card", style="width:100%">
     <div class="card bg-dark text-white">
@@ -11,6 +11,36 @@
             {{post.description}}
         </div>
         <div class="card-footer", style="text-align:right; font-size:0.8em">
+            
+            <div id="update">
+                <form action="{% url 'post:post_update' post.id%}" method="get" class="my-3">
+                    {% csrf_token %}
+                    <!-- 오류표시 Start -->
+                    {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                    {% for field in form %}
+                        {% if field.errors %}
+                        <strong>{{ field.label }}</strong>
+                        {{ field.errors }}
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <input type="submit" value="게시글 수정하기" class="btn btn-primary">
+                    
+                </form>
+            </div>
+            <script>
+                if ("{{request.user.username}}" == "{{post.author}}"){
+                    document.getElementById("update").style.display = "block";
+                    console.log("같다")
+                }else{
+                    document.getElementById("update").style.display = "none";
+                    console.log("다르다")
+                }
+
+            </script>
             {{ post.register_date }}
         </div>
       </div>
@@ -20,10 +50,10 @@
     <div class="row">
             <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%">
                 <div style="margin-left:2%; margin-right:2%">
-                <h5 class="border-bottom my-3 py-2">
-                    {{post.comment_set.count}}개의 답변이 있습니다.
-                </h5>
-                    {{ post.content|safe }}
+                    <h5 class="border-bottom my-3 py-2">
+                        {{post.comment_set.count}}개의 답변이 있습니다.
+                    </h5>
+                    <div class='code_content'>{{ post.content|safe }}</div>
                 </div>
             </div>
             <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%">

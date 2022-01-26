@@ -1,22 +1,24 @@
 {% load bootstrap5 %}
 {% block content %}
 <body class="bg-light">
-    
     <main class="container">    
       <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">내가 쓴 글</h6>
         
-        {% for wri_data in wri_info %}
+        {% for data in post_data %}
           <div class="d-flex text-muted pt-3 ">
-            <p class="pb-1 mb-0 small lh-sm border-bottom col-11">
-              <strong class="d-block text-gray-dark">
-                {{wri_data.title}}
-              </strong>
-                {% if wri_data.solved %}
-                    <span class="badge bg-success">Close</span> 
+            <p class="pb-3 mb-0 small lh-sm border-bottom col-11">
+              <strong class="d-block text-gray-dark">@{{data.author}}
+                {% if data.solved %}
+                  <span class="badge bg-success">Close</span> 
                 {% else %}
-                    <span class="badge bg-warning text-dark">Open</span>
+                  <span class="badge bg-warning text-dark">Open</span>
                 {% endif %} 
+                
+              </strong>
+              <a href="{% url 'post:detail' data.id %}">
+                {{ data.subject }}
+              </a>
             </p>
             <small class="d-block text-end mt-3 col">
                 
@@ -26,7 +28,7 @@
 
         <div style='text-align:center'>
           <ul class='pagination'>
-            {% for i in wri_range %}
+            {% for i in post_range %}
               <li>
                 <a href='{% url "codagram:index" %}?page={{ i }}'>
                   {{ i }}
@@ -36,25 +38,24 @@
           </ul>
         </div> 
 
-        <small class="d-block text-end mt-3">
-          <a href="#">All updates</a>
-        </small>
       </div>
     
       <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">내가 단 답글</h6>
-        {% for com_data in com_info %}
+        {% for data in com_data %}
           <div class="d-flex text-muted pt-3 ">
             <p class="pb-3 mb-0 small lh-sm border-bottom col-11">
-              <strong class="d-block text-gray-dark">@{{com_data.author}}
-                {% if com_data.write.solved %}
-                  <span class="badge bg-success">Success</span> 
+              <strong class="d-block text-gray-dark">@{{data.author}}
+                {% if data.post.solved %}
+                  <span class="badge bg-success">Close</span> 
                 {% else %}
-                  <span class="badge bg-warning text-dark">Warning</span>
+                  <span class="badge bg-warning text-dark">Open</span>
                 {% endif %} 
                 
               </strong>
-              {{com_data.write.title}}
+              <a href="{% url 'post:detail' data.post.id %}"> 
+                {{data.post.subject}}
+              </a>
             </p>
             <small class="d-block text-end col">
               <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalChoice">Del</button>
@@ -91,10 +92,7 @@
           {% endfor %}
         </ul>
       </div> 
-        
-        <small class="d-block text-end mt-3">
-          <a href="#">All updates</a>
-        </small>
+
       </div>
 
     </body>

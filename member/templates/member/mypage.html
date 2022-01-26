@@ -8,23 +8,25 @@
       <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">내가 쓴 글</h6>
         
-        {% for wri_data in wri_info %}
+        {% for data in post_data %}
           <div class="d-flex text-muted pt-3 ">
             <p class="pb-3 mb-0 small lh-sm border-bottom col-11">
-              <strong class="d-block text-gray-dark">@{{wri_data.author}}
-                {% if wri_data.solved %}
+              <strong class="d-block text-gray-dark">@{{data.author}}
+                {% if data.solved %}
                   <span class="badge bg-success">Close</span> 
                 {% else %}
                   <span class="badge bg-warning text-dark">Open</span>
                 {% endif %} 
                 
               </strong>
-              {{wri_data.title}}
+              <a href="{% url 'post:detail' data.id %}">
+                {{ data.subject }}
+              </a>
             </p>
             <small class="d-block text-end mt-3 col">
-              <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalChoice">Del</button>
+              <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalChoice1">Del</button>
 
-              <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+              <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice1">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content rounded-4 shadow">
                     <div class="modal-body p-4 text-center">
@@ -32,7 +34,7 @@
                       <p class="mb-0">글을 정말 삭제하겠습니까?</p>
                     </div>
                     <div class="modal-footer flex-nowrap p-0">
-                        <a href="/member/delete/?text_type=0&id={{ wri_data.id }}" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-right btn-lg active" role="button" aria-pressed="true"> 네 </a>
+                        <a href="/member/delete/?text_type=0&id={{ data.id }}" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-right btn-lg active" role="button" aria-pressed="true"> 네 </a>
                       <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0" data-bs-dismiss="modal">아니요</button>
                     </div>
                   </div>
@@ -42,38 +44,36 @@
           </div>
         {% endfor %}
 
-        <div style='text-align:center'>
-          <ul class='pagination'>
-            {% for i in wri_range %}
-                <li class="page-item"><a class="page-link" href="{% url 'member:mypage' %}?page={{ i }}">{{ i }}</a></li>
-          {% endfor %}
-          </ul>
-        </div> 
-
-        <small class="d-block text-end mt-3">
-          <a href="#">All updates</a>
-        </small>
-      </div>
+        <div>
+            <ul class='pagination'>
+              {% for i in post_range %}
+                  <li class="page-item"><a class="page-link" href="{% url 'member:mypage' %}?post_page={{i}}&com_page={{cur_com}}">{{ i }}</a></li>
+            {% endfor %}
+            </ul>
+          </div> 
+        </div>
     
       <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">내가 단 답글</h6>
-        {% for com_data in com_info %}
+        {% for data in com_data %}
           <div class="d-flex text-muted pt-3 ">
             <p class="pb-3 mb-0 small lh-sm border-bottom col-11">
-              <strong class="d-block text-gray-dark">@{{com_data.author}}
-                {% if com_data.write.solved %}
+              <strong class="d-block text-gray-dark">@{{data.author}}
+                {% if data.post.solved %}
                   <span class="badge bg-success">Close</span> 
                 {% else %}
                   <span class="badge bg-warning text-dark">Open</span>
                 {% endif %} 
                 
               </strong>
-              {{com_data.write.title}}
+              <a href="{% url 'post:detail' data.post.id %}"> 
+                {{data.post.subject}}
+              </a>
             </p>
             <small class="d-block text-end col">
-              <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalChoice">Del</button>
+              <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalChoice2">Del</button>
 
-              <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+              <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice2">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content rounded-4 shadow">
                     <div class="modal-body p-4 text-center">
@@ -81,7 +81,7 @@
                       <p class="mb-0">댓글을 정말 삭제하겠습니까?</p>
                     </div>
                     <div class="modal-footer flex-nowrap p-0">
-                        <a href="/member/delete/?text_type=0&id={{ wri_data.id }}" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-right btn-lg active" role="button" aria-pressed="true"> 네 </a>
+                        <a href="/member/delete/?text_type=1&id={{ data.id }}" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-right btn-lg active" role="button" aria-pressed="true"> 네 </a>
                       <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0" data-bs-dismiss="modal">아니요</button>
                     </div>
                   </div>
@@ -97,14 +97,11 @@
 
 
           {% for i in com_range %}
-                <li class="page-item"><a class="page-link" href="{% url 'member:mypage' %}?page={{ i }}">{{ i }}</a></li>
+                <li class="page-item"><a class="page-link" href="{% url 'member:mypage' %}?post_page={{post_page}}&com_page={{i}}">{{ i }}</a></li>
           {% endfor %}
         </ul>
       </div> 
         
-        <small class="d-block text-end mt-3">
-          <a href="#">All updates</a>
-        </small>
       </div>
 
     </body>

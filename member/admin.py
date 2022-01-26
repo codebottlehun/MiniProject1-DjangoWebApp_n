@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Write, Comment
+from .models import User, Alarm
 
 
 # Register your models here.
@@ -7,10 +7,6 @@ from .models import User, Write, Comment
 class PostAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Write)
-class PostAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(Comment)
+@admin.register(Alarm)
 class PostAdmin(admin.ModelAdmin):
     pass

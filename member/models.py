@@ -1,9 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.forms import DateTimeField, DateTimeInput, IntegerField
+from sqlalchemy import ForeignKey
 
 
 class User(AbstractUser) :
-    user_type = models.IntegerField(default=0)
+    # user_type select opsion
+    NATIONAL_CHOICES = (
+		(0, 'Aibler'),
+        (1, 'Tutor'),
+    )
+    user_type = models.IntegerField(choices=NATIONAL_CHOICES) # user_type select form
     nickname = models.CharField(blank=True, max_length=50)
     user_photo = models.ImageField(blank=True)
 
@@ -30,3 +37,8 @@ class Comment(models.Model) :
     write = models.ForeignKey(
         Write, on_delete=models.SET_NULL, null=True
     )
+
+# class Alarm(models.Model) :
+#     write = ForeignKey(Write, on_delete=models.SET_NULL)
+#     user = ForeignKey(User, on_delete=models.SET_NULL)
+#     check_time = DateTimeField(blank=True)

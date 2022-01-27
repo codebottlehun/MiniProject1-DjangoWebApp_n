@@ -15,7 +15,6 @@ class PostForm(forms.ModelForm):
   class Meta:
     model = Post
     fields = ['subject', 'description', 'content', 'tags']
-    tag=forms.CharField(required=False, label='태그')
     widgets = {
         'subject': TextInput(attrs={
             'class':'form-control',
@@ -26,13 +25,11 @@ class PostForm(forms.ModelForm):
             'width':'100%',
             'rows': 5,
         }),
-        'tags': TextInput(attrs={
-            'class':'form-control',
-            'width':'100%',
-        }),
+        
     }
     labels = {
       'subject': '제목',
       'description': '설명',
       'content': '코드',
+      'tags':'태그',
     }

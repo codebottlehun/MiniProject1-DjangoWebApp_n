@@ -1,8 +1,7 @@
 from email.policy import default
 from django.db import models
 from ckeditor.fields import RichTextField
-from tag.models import Tag
-#from member.models import Users
+from tagging.fields import TagField
 from django.conf import settings
 
 class Post(models.Model):
@@ -13,7 +12,7 @@ class Post(models.Model):
     content = RichTextField()
     register_date = models.DateTimeField()
     solved = models.BooleanField(default=False)
-    tags = models.ManyToManyField(Tag, verbose_name='태그')
+    tags = TagField()
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="like_posts", blank=True)
 
     def __str__(self):

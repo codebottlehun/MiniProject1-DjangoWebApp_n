@@ -5,7 +5,6 @@ from .models import Post, Comment
 from django.utils import timezone
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
-from tag.models import Tag
 
 def index(request):
     post_list = Post.objects.order_by('-register_date')
@@ -63,13 +62,14 @@ def post_create(request):
             post.register_date = timezone.now()
             post.save()
 
-            tags = form.cleaned_data['tags'].split(',')
-            for tag in tags:
-                if not tag:
-                    continue
-                tag = tag.strip()
-                _tag, _ = Tag.objects.get_or_create(name=tag)
-                post.tags.add(_tag)
+            # tags = form.cleaned_data['tags'].split(',')
+            # for tag in tags:
+            #     if not tag:
+            #         continue
+            #     tag = tag.strip()
+            #     _tag, _ = Tag.objects.get_or_create(name=tag)
+
+            #     post.tags += _tag
             return redirect('post:index')
     else:
         form = PostForm()

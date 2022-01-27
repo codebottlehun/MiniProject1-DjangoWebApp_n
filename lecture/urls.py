@@ -22,14 +22,4 @@ urlpatterns = [
 
     # memo
     path('memo/', memo, name='memo'),
-
-    # chat 안씀
-    path('home/',home,name='home'),
-    path('home/lecture/<str:room>/',room,name='room'),
-    path('home/checkview',checkview,name='checkview'),
-    path('home/lecture/<str:room>/send', send, name='send'),
-    path('./getMessages/<str:room>/', getMessages, name='getMessages'),
-
-    # 아직 안씀
-    # path('memo/',memo_index,name='memo_index'),
     ]

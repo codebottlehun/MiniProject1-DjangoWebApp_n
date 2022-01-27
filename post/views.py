@@ -105,7 +105,10 @@ def comment_get(request):
     return JsonResponse(data, safe=False)
 
 def comment_delete(request, post_id, author):
-    return HttpResponse(post_id, author)
+    post = Post.objects.get(id=post_id)
+    comment = Comment.objects.get(author=author)
+    comment.delete()
+    return redirect('post:detail', post_id=post.id)
 
 def select_comment(request, post_id, author):
     post = get_object_or_404(Post, id=post_id)

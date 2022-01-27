@@ -14,7 +14,7 @@
             {{post.description}}
         </div>
         <div class="card-footer", style="text-align:right; font-size:0.8em">
-            <div id="update">
+            <div id="update" style="display:inline">
                 <form action="{% url 'post:post_update' post.id%}" method="get" class="my-3" style="display:inline">
                     {% csrf_token %}
                     <!-- 오류표시 Start -->
@@ -80,7 +80,7 @@
             </div>
             <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%">
                 <div style="margin-left:2%; margin-right:5%">
-                    <ul class="nav nav-tabs border-bottom" style="margin-top:0.5em">
+                    <ul class="nav nav-tabs border-bottom" style="margin-top:0.5em" id="my">
                             {% for comment in post.comment_set.all %}
                                 {% if forloop.first %}
                                     <li class="nav-item" id="{{forloop.counter0}}">
@@ -162,12 +162,10 @@
                                                     }
                                                     else{
                                                         if ("{{comment.author}}" == "{{request.user.username}}"){
-                                                            console.log('a')
                                                             btn.innerText = '답변 삭제하기';
                                                             btn.style.display = "block";
                                                             f.action = "{% url 'post:comment_delete' post.id comment.author%}";
                                                         }else{
-                                                            console.log('b')
                                                             btn.style.display = "none";
                                                         }
                                                     }
@@ -184,7 +182,18 @@
                         </div>
                     </div>
                 </div>
+                {% comment %} <button class="carousel-control-prev" type="button" data-bs-target="#my" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#my" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button> {% endcomment %}
             </div>
+            {% comment %} <script>
+                document.querySelector("#nav-tabs").BsNavPaginator(3, "nav-link");
+            </script> {% endcomment %}
         </div>
     </div>
     <div class="modal fade" id="comment">
@@ -302,15 +311,15 @@
             const ci = document.getElementById("comment_input");
             ci.style.display = 'none';
         </script>
-        {% for comment in post.comment_set.all %}
+        {% comment %} {% for comment in post.comment_set.all %}
             {% if comment.solved %}
                 <script>
                     $( document ).ready(function() {
-                        $('#{{forloop.counter}}').before($('#{{forloop.first}}'));
+                        $('#{{forloop.counter}}').before($('#0'));
                     });
                 </script>
             {% endif%}
-        {%endfor%}
+        {%endfor%} {% endcomment %}
     {% endif%}
 </div>
 {% endblock %}

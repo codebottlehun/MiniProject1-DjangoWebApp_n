@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title></title>
+        <title>makes your ability to development more powerful</title>
         <link href="{% static "style.css" %}" rel="stylesheet">
         <link
             rel="stylesheet"
@@ -57,7 +57,7 @@
                             </svg>
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                10
+                                {{ alarm_list|length }}
                             </span>
                             &nbsp&nbsp
                         </a>
@@ -132,7 +132,7 @@
             </div>
             <div id="searchBox" class="d-flex bg-light" style="opacity:0.8;">
                 <div class="d-flex ms-auto">
-                    <form class="d-flex p-1" style="width: 280px;" actiom="" method="get">
+                    <form class="d-flex p-1" style="width: 280px;" action="{% url 'codagram:index' %}" method="get">
                         <input
                             class="form-control ms-auto"
                             type="text"
@@ -184,12 +184,14 @@
                         <div class="d-flex">
                             <div class="d-flex p-1 justify-content-center border-0">
                                 <div >
-                                    <button id="new-post" class="btn btn-primary bg-gradient " style="opacity:0.8">새 포스팅 쓰기</button>
+                                    <button id="new-post" class="btn btn-primary bg-gradient " style="opacity:0.8">
+                                        새 포스팅 쓰기
+                                    </button>
                                 </div>
                             </div>
                             <div class="d-flex p-1 justify-content-center border-0" style="opacity:0.9">
                                 <div >
-                                    <button id="new-post" class="btn btn-warning bg-gradient" style="font-color:rgb(0,0,0);">
+                                    <button id="new-lecture" class="btn btn-warning bg-gradient" style="font-color:rgb(0,0,0);">
                                         <a class="text-decoration-none" style="color:rgb(255,255,255); ">
                                         신규 강좌 개설
                                         </a>
@@ -197,8 +199,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                     
+                    </div>
+                    <div id="profileView-margin" style="height:100px;"></div>
                 </div>
             </div>
             
@@ -228,21 +231,16 @@
     $(function () {
         //Keep track of last scroll
         var submenuHide = false;
-        var searchOff = false;
+
         var nontarget = ['/member/', '/post/', '/denine/'];
         nontarget.forEach(function(item) {
-            console.log(item);
             if(window.location.pathname.indexOf(item) != -1){
                 submenuHide = true;
-                if(window.location.pathname.indexOf("/denine/") != -1){
-                    searchOff = true;
-                }
             }
         });
 
         if ( window.location.pathname == '/codagram/' ){ 
-            //오징!
-            $("#sidebar-wrapper").css("width", "150px");
+            //$("#sidebar-wrapper").css("width", "150px");
             {% if request.user.is_authenticated %}
                 $("#sidebar-wrapper2").css("width", "300px");
             {% endif %}
@@ -261,13 +259,39 @@
                 $("#sidebar-wrapper2").css("width", "300px");
             }
         {% endif %}
+        var newpostClick = false;
+
+        var currentpage = 1;
+        var myfuntion = ()=>{
+            let query = ""
+            let urlindex = $(location).attr('href').indexOf('?')
+            if ( urlindex != -1){
+                query = $(location).attr('href').substring(urlindex+3);
+            }
+            console.log(query);
+            let param = {
+                'paging_list': currentpage,
+                'query': query,
+            }
+            $.ajax({
+                url : '{% url "codagram:postlist_new" %}',
+                type : 'POST',
+                data : JSON.stringify(param),
+                success:function(data){
+                    $("#post_list_target").append(data);
+                    currentpage += 1;
+                    newpostClick = false;
+                },
+            });
+        }
+
+
         
         $(window).bind('mousewheel', function(event) {
             if(submenuHide == false){
                 if (event.originalEvent.wheelDelta >= 0) {
                     if ($("#sidebar-wrapper").css("width").replace('px','') < 100) {
-                        //오징!
-                        $("#sidebar-wrapper").css("width", "150px");
+                        //$("#sidebar-wrapper").css("width", "150px");
                         {% if request.user.is_authenticated %}
                             $("#sidebar-wrapper2").css("width", "300px");
                         {% endif %}
@@ -275,18 +299,29 @@
                 }
                 else {
                     if ($("#sidebar-wrapper2").css("width").replace('px','') > 100) {
-                        $("#sidebar-wrapper").css("width", "0px");
+                        //$("#sidebar-wrapper").css("width", "0px");
                         $("#sidebar-wrapper2").css("width", "0px");
+                    }
+                    if($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
+                        if(newpostClick == false){
+                            {% if more == "F" %}
+                            {% else %}
+                                newpostClick = true;
+                                myfuntion();
+                            {% endif %}
+                        }
                     }
                 }
             }
         });
         
         
+        
         document.getElementById("searchBtn").addEventListener("click", javascript_onclik_searchBtn);
+        document.getElementById("new-post").addEventListener("click", javascript_onclik_newpost);
+        document.getElementById("new-lecture").addEventListener("click", javascript_onclik_newlecture);
         var searchBtn_On = false;
         function javascript_onclik_searchBtn(){
-            if(!searchOff){
                 if (searchBtn_On){
                     $("#searchBox").css("height", "0px");
                     $("#searchBtn").attr('class', 'btn btn-dark');
@@ -297,8 +332,20 @@
                     $("#searchBtn").attr('class', 'btn btn-secondary');
                     searchBtn_On = true;
                 }
-            }
         }
+        function javascript_onclik_newpost(){
+            location.href = "{% url 'post:post_create' %}";
+        }
+        function javascript_onclik_newlecture(){
+            location.href = "{% url 'post:post_create' %}";
+        }
+
+        let titletmp = "Codagram " + ("{{request.path}}").replace('/', '· ');
+        function replaceAll(str, searchStr, replaceStr) {
+            return str.split(searchStr).join(replaceStr);
+        }
+        titletmp = replaceAll(titletmp, '/', '-')
+        document.title = titletmp ;
 
         //document.getElementById("new-post").addEventListener("click", javascript_onclikc);
         //function javascript_onclikc(){

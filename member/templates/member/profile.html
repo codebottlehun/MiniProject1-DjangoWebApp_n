@@ -1,99 +1,81 @@
 {% load bootstrap5 %}
-{% block content %}
-<body class="bg-light">
-    <main class="container">    
-      <div class="my-3 p-3 bg-body rounded shadow-sm">
-        <h6 class="border-bottom pb-2 mb-0">내가 쓴 글</h6>
-        
-        {% for data in post_data %}
-          <div class="d-flex text-muted pt-3 ">
-            <p class="pb-3 mb-0 small lh-sm border-bottom col-11">
-              <strong class="d-block text-gray-dark">@{{data.author}}
-                {% if data.solved %}
-                  <span class="badge bg-success">Close</span> 
-                {% else %}
-                  <span class="badge bg-warning text-dark">Open</span>
-                {% endif %} 
-                
-              </strong>
-              <a href="{% url 'post:detail' data.id %}">
-                {{ data.subject }}
-              </a>
-            </p>
-            <small class="d-block text-end mt-3 col">
-                
-            </small>
-          </div>
-        {% endfor %}
-
-        <div style='text-align:center'>
-          <ul class='pagination'>
-            {% for i in post_range %}
-              <li>
-                <a href='{% url "codagram:index" %}?page={{ i }}'>
-                  {{ i }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </div> 
-
-      </div>
-    
-      <div class="my-3 p-3 bg-body rounded shadow-sm">
-        <h6 class="border-bottom pb-2 mb-0">내가 단 답글</h6>
-        {% for data in com_data %}
-          <div class="d-flex text-muted pt-3 ">
-            <p class="pb-3 mb-0 small lh-sm border-bottom col-11">
-              <strong class="d-block text-gray-dark">@{{data.author}}
-                {% if data.post.solved %}
-                  <span class="badge bg-success">Close</span> 
-                {% else %}
-                  <span class="badge bg-warning text-dark">Open</span>
-                {% endif %} 
-                
-              </strong>
-              <a href="{% url 'post:detail' data.post.id %}"> 
-                {{data.post.subject}}
-              </a>
-            </p>
-            <small class="d-block text-end col">
-              <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalChoice">Del</button>
-
-              <div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content rounded-4 shadow">
-                    <div class="modal-body p-4 text-center">
-                      <h5 class="mb-0">Commemt Delete</h5>
-                      <p class="mb-0">댓글을 정말 삭제하겠습니까?</p>
-                    </div>
-                    <div class="modal-footer flex-nowrap p-0">
-                      <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-right">
-                        <strong><a href="/mypage/delete/?text_type=0&id={{ com_data.id }}">네</a></strong>
-                      </button>
-                      <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0" data-bs-dismiss="modal">아니요</button>
-                    </div>
-                  </div>
+{% block content %}  
+<div class="mx-2 border border-light border-top-0 border-bottom-0 border-5" style="background-color:#F5F5F5">
+    <h6 class="card-header botext-muted">내가 쓴 글</h6>
+    <div class="d-flex flex-column m-1">
+        <div class="d-flex flex-column  text-muted ">
+            {% for data in post_data %}
+                <div class="d-flex justify-content-between border-bottom py-2 bg-light">
+                    <a
+                        href="{% url 'post:detail' data.id %}"
+                        class="ms-2 text-decoration-none"
+                        style="color:rgb(0,0,0)">
+                        {{ data.subject }}
+                    </a>
+                    {% if data.solved %}
+                      <a class="mb-1 me-1" style="color:#0275d8; font-weight:bold; font-size:0.7em">Solved</a>
+                    {% else %}
+                      <a class="mb-1 me-1" style="color:#f0ad4e; font-weight:bold; font-size:0.7em">Open</a>
+                    {% endif %}
+                    
                 </div>
-              </div>
-              
-            </small>
-          </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if post_range %}
+    <div class='d-flex justify-content-center bd-highlight m-1'>
+        [&nbsp;
+      {% for i in post_range %}
+        <a
+            href='{% url "codagram:index" %}?page={{ i }}'
+            class="text-decoration-none"
+            style="color:rgb(0,0,0)">
+            {{ i }}&nbsp;
+        </a>
         {% endfor %}
+        ]
+    </div>    
+    {% endif %}
+</div>
 
-      <div style='text-align:center'>
-        <ul class='pagination'>
-          {% for i in com_range %}
-            <li>
-              <a href='{% url "paging:army_shop" %}?page={{ i }}'>
-                {{ i }}
-              </a>
-            </li>
+
+<div class="mx-2 border border-light border-top-0 border-bottom-0 border-5" style="background-color:#F5F5F5">
+  <h6 class="card-header botext-muted">내가 단 답글</h6>
+  <div class="d-flex flex-column m-1">
+      <div class="d-flex flex-column  text-muted ">
+          {% for data in com_data %}
+          <div class="d-flex justify-content-between border-bottom py-2 bg-light">
+                <a
+                      href="{% url 'post:detail' data.post.id %}"
+                      class="ms-2 text-decoration-none"
+                      style="color:rgb(0,0,0)">
+                      {{ data.post.subject }}
+                  </a>
+                {% if data.solved %}
+                      <a class="mb-1 me-1" style="color:#0275d8; font-weight:bold; font-size:0.7em">Solved</a>
+                    {% else %}
+                      <a class="mb-1 me-1" style="color:#f0ad4e; font-weight:bold; font-size:0.7em">Open</a>
+                    {% endif %}
+                  
+              </div>
           {% endfor %}
-        </ul>
-      </div> 
-
       </div>
+  </div>
+  {% if com_range %}
+  <div class='d-flex justify-content-center bd-highlight m-1'>
+    
+    [&nbsp;
+    {% for i in com_range %}
+    <a
+        href='{% url "paging:army_shop" %}?page={{ i }}'
+        class="text-decoration-none"
+        style="color:rgb(0,0,0)">
+        {{ i }}&nbsp;
+    </a>
+    {% endfor %}
+    ]
+  </div>   
+  {% endif%}
+</div>
 
-    </body>
-    {% endblock %}
+{% endblock %}

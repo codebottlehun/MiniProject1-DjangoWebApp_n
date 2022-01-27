@@ -1,5 +1,7 @@
 
 {% extends "codagram/layout.html" %}
+{% load post_tags %}
+
 {% block content %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/static/bootstrap-nav-paginator.min.js"></script>
@@ -16,44 +18,63 @@
         <div class="card-text" style="margin-left: 1%; margin-right: 1%; margin-top:1px; white-space: pre-line; overflow:auto; height:150px">
             {{post.description}}
         </div>
-        <div class="card-footer", style="font-size:0.8em; text-align:right;">
-            <div id="update" style="display:inline;">
-                <form action="{% url 'post:post_update' post.id%}" method="get" class="my-3" style="display:inline">
-                    {% csrf_token %}
-                    <!-- 오류표시 Start -->
-                    {% if form.errors %}
-                    <div class="alert alert-danger" role="alert">
-                    {% for field in form %}
-                        {% if field.errors %}
-                        <strong>{{ field.label }}</strong>
-                        {{ field.errors }}
-                        {% endif %}
-                    {% endfor %}
-                    </div>
+        <div class="row row-cols-2 card-footer align-content-center flex-wrap", style="font-size:0.8em; text-align:right;">
+            <div class="col-1 pt-1">
+                <div>
+                    {% if post|is_like_user:request.user %}
+                        <a href="{% url "post:dislike_post" post.pk %}" style="color: inherit;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="rgb(255,0,0)" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                        </a>
+                    {% else %}
+                        <a href="{% url "post:like_post" post.pk %}" style="color: inherit;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="rgb(255,0,0)" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                            </svg>
+                        </a>
                     {% endif %}
-                    
-                    <button id="post_update_btn" type="submit" class="btn btn-primary" style="font-size:10px; padding:2px">게시글 수정하기</button>
-                    
-                </form>
-                <form action="{% url 'post:post_delete' post.id%}" method="get" class="my-3" style="display:inline">
-                    {% csrf_token %}
-                    <!-- 오류표시 Start -->
-                    {% if form.errors %}
-                    <div class="alert alert-danger" role="alert">
-                    {% for field in form %}
-                        {% if field.errors %}
-                        <strong>{{ field.label }}</strong>
-                        {{ field.errors }}
-                        {% endif %}
-                    {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <button id="post_delete_btn" type="submit" class="btn btn-danger" style="font-size:10px; padding:2px">게시글 삭제하기</button>
-                    
-                </form>
+                </div>
             </div>
-            <div style="display:inline;">{{ post.register_date }}</div>
+            <div class="col-11">
+                <div id="update" style="display:inline;">
+                    <form action="{% url 'post:post_update' post.id%}" method="get" class="my-3" style="display:inline">
+                        {% csrf_token %}
+                        <!-- 오류표시 Start -->
+                        {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                        {% for field in form %}
+                            {% if field.errors %}
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <button id="post_update_btn" type="submit" class="btn btn-primary" style="font-size:10px; padding:2px">게시글 수정하기</button>
+                        
+                    </form>
+                    <form action="{% url 'post:post_delete' post.id%}" method="get" class="my-3" style="display:inline">
+                        {% csrf_token %}
+                        <!-- 오류표시 Start -->
+                        {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                        {% for field in form %}
+                            {% if field.errors %}
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <button id="post_delete_btn" type="submit" class="btn btn-danger" style="font-size:10px; padding:2px">게시글 삭제하기</button>
+                        
+                    </form>
+                </div>
+                <div style="display:inline;">{{ post.register_date }}</div>
+            </div>
             <script>
                 if ("{{request.user.username}}" == "{{post.author}}"){
                     document.getElementById("update").style.display = "block";

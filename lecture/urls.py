@@ -5,6 +5,7 @@ app_name = 'lecture'
 
 urlpatterns = [
     path('',index, name='index'),
+    path('empty_page/',empty_page, name='empty_page'),
     path('input_video/',input_video,name='input_video'),
     
     # vote url

@@ -17,8 +17,12 @@ video 관련 view
 '''
 
 def index(request):
-    videos = Video.objects.all()
-    return render(request, 'lecture/index.html', context={'videos':videos})
+    videos_tuttor = Video.objects.filter(user_type=1)
+    videos_aibler = Video.objects.filter(user_type=0)
+    return render(request, 'lecture/index.html', context={'video_tuttor':videos_tuttor, 'videos_aibler':videos_aibler})
+
+def empty_page(request):
+    return HttpResponse('lecture/empty_page.html')
 
 def input_video(request):
     if request.method == "GET": 

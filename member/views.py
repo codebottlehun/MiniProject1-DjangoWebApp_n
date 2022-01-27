@@ -1,10 +1,16 @@
+from django.http import HttpRequest, HttpResponse, response
 from django.shortcuts import render, redirect
-from .models import Alarm
+from .models import Alarm, User
 from post.models import Post, Comment
 from .forms import SignupForm
 from django.core.paginator import Paginator
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
+import json
 
 #bottle - django 
 from django.contrib.auth.views import (
@@ -48,8 +54,8 @@ def my_paper(request) :
     # 내가 쓴 글 리스트업 작업
     post_page = int(request.GET.get('wri_page', 1))
 
-    id = request.user.get_username()
-    post = Post.objects.filter(author = id)
+    id = request.user.id
+    post = Post.objects.filter(user_id = id)
 
     post.order_by('-register_date')
 
@@ -64,7 +70,7 @@ def my_paper(request) :
     # 내가 쓴 글 리스트업 작업
     com_page = request.GET.get('com_page', 1)
 
-    comment = Comment.objects.filter(author = id)
+    comment = Comment.objects.filter(user_id = id)
 
     comment.order_by('-register_date')
 
@@ -110,10 +116,27 @@ def delete(request) :
 
     return redirect('member:mypage')
 
+# alarm 기능은 형섭님 models class Comment에 check 변수 후 사용 가능합니다.
+#   check = models.BooleanField(default=False) 추가 바랍니다.
+
 def alarm(request) :
     # 사용자의 알람을 조회하는 기능
-    alarm = Alarm.objects.filter(user = request.user.id)
-    return alarm
+    post = Post.objects.filter(user_id=request.user.id)
+    data = []
+    for p in post :
+        for c in Comment.objects.filter(check=False, post_id=p.id) :
+            data.append(model_to_dict(c))
+
+    return JsonResponse(data, safe=False)
+
+def check_alarm(request) :
+    source = alarm(request)
+    data = json.loads(source.content)
+    for d in data :
+        comment = Comment.objects.filter(id = d['id'])
+        for c in comment :
+            c.check = True
+            c.save()
 
 def search(request, keyword) :
     # 검색 기능

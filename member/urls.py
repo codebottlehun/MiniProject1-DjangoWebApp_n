@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete/', views.delete, name='delete'),
     path('alarm/', views.alarm, name='alarm'),
     path('check_alarm/', views.check_alarm, name='check_alarm'),
+    path('click_alarm/', views.click_alarm, name='click_alarm'),
 ]

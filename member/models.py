@@ -20,6 +20,6 @@ class User(AbstractUser) :
             return resolve_url("pydenticon_image", self.username)
 
 class Alarm(models.Model) :
-    write = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     check_time = models.DateTimeField(blank=True)

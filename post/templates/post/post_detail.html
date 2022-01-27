@@ -6,12 +6,14 @@
   <div class="card", style="width:100%">
     <div class="card bg-dark text-white">
       <div class="card-body">
-        <h4 class="card-title" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px">{{ post.subject }}</h4>
+        <h4 class="card-title" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px">
+            {{ post.subject }}
+            <span id="progress_badge" class="badge rounded-pill bg-primary" style="display:inline; font-size:0.5em;">진행중</span>
+        </h4>
         <div class="card-text" style="margin-left: 1%; margin-right: 1%; margin-top:1px; white-space: pre-line; overflow:auto; height:150px">
             {{post.description}}
         </div>
         <div class="card-footer", style="text-align:right; font-size:0.8em">
-            
             <div id="update">
                 <form action="{% url 'post:post_update' post.id%}" method="get" class="my-3" style="display:inline">
                     {% csrf_token %}
@@ -27,7 +29,7 @@
                     </div>
                     {% endif %}
                     
-                    <button type="submit" class="btn btn-primary" style="font-size:10px; padding:2px">게시글 수정하기</button>
+                    <button id="post_update_btn" type="submit" class="btn btn-primary" style="font-size:10px; padding:2px">게시글 수정하기</button>
                     
                 </form>
                 <form action="{% url 'post:post_delete' post.id%}" method="get" class="my-3" style="display:inline">
@@ -44,7 +46,7 @@
                     </div>
                     {% endif %}
                     
-                    <button type="submit" class="btn btn-danger" style="font-size:10px; padding:2px">게시글 삭제하기</button>
+                    <button id="post_delete_btn" type="submit" class="btn btn-danger" style="font-size:10px; padding:2px">게시글 삭제하기</button>
                     
                 </form>
                 <div style="display:inline">{{ post.register_date }}</div>
@@ -191,7 +193,7 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <input type="submit" value="답변등록" class="btn btn-primary" data-bs-dismiss="modal">
+                        <input id="comment_input" type="submit" value="답변등록" class="btn btn-primary" data-bs-dismiss="modal">
                     </div>
                 </form>
             </div>
@@ -247,6 +249,24 @@
             </div>
         </div>
     </div>
+    {% if post.solved %}
+        <script>
+            const pb = document.getElementById("progress_badge");
+            pb.textContent = "완료"
+            pb.className = "badge rounded-pill bg-secondary"
+            //pb.class = 
 
+            const pub = document.getElementById("post_update_btn");
+            pub.style.display = 'none';
+            //const pdb = document.getElementById("post_delete_btn");
+            //pdb.style.display = 'none';
+            const cw = document.getElementById("comment_write");
+            cw.style.display = 'none';
+            const cb = document.getElementById("comment_btn");
+            cb.style.display = 'none';
+            const ci = document.getElementById("comment_input");
+            ci.style.display = 'none';
+        </script>
+    {% endif%}
 </div>
 {% endblock %}

@@ -58,20 +58,43 @@
 
                     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                         <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h5>
+                            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
+
+                                <a
+                                    href="{% url "codagram:index" %}"
+                                    class="d-flex align-items-center text-dark text-decoration-none">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="30"
+                                        height="30"
+                                        fill="rgb(0, 0, 50)"
+                                        class="bi bi-code-square mt-1 mx-2"
+                                        viewbox="0 0 16 16"
+                                        >
+                                        <path
+                                            d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                        <path
+                                            d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z"/>
+                                    </svg>
+
+                                    <span class="fs-4 text-dark">Codagram</span>
+                                </a>
+
+                            </h5>
                             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body">
                             <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/codagram/">Codagram Home</a>
+                                
+                                <!-- <a class="nav-link active" aria-current="page" href="/codagram/">Codagram Home</a> -->
                             </li>
                             <li class="nav-item">
 
                                 <!-- <a class="nav-link" href="#">Link</a> -->
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:2em; margin-top: 10px; text-align: center; color: black;">
                                     AIVLE 수업 목록
                                 </a>
                                 
@@ -89,7 +112,7 @@
 
                                     {% for item in videos %}
                                     <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
-                                    <li><a class="dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'">{{ item.title }}</a></li>
+                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'">{{ item.title }}</a></li>
                                     {% endfor %}
 
                                     <!-- <li><a class="dropdown-item" href="#">Action</a></li>

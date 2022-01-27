@@ -49,8 +49,8 @@
                     <button id="post_delete_btn" type="submit" class="btn btn-danger" style="font-size:10px; padding:2px">게시글 삭제하기</button>
                     
                 </form>
-                <div style="display:inline">{{ post.register_date }}</div>
             </div>
+            <div style="display:inline">{{ post.register_date }}</div>
             <script>
                 if ("{{request.user.username}}" == "{{post.author}}"){
                     document.getElementById("update").style.display = "block";
@@ -81,66 +81,102 @@
             <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%">
                 <div style="margin-left:2%; margin-right:5%">
                     <ul class="nav nav-tabs border-bottom" style="margin-top:0.5em">
-                        {% for comment in post.comment_set.all %}
-                            {% if forloop.first %}
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
-                                    <div id="author" style="display:none">{{comment.author}}</div>
-                                </li>
-                                <script>
-                                    document.querySelector('#{{comment.author}}').addEventListener(
-                                        'click',
-                                        () => {
-                                            const data = axios({
-                                                url: '/post/comment/get/',
-                                                method: 'get',
-                                                params: {
-                                                    username: "{{comment.author}}",
-                                                }
-                                            });
-                                            data.then(function(result){
-                                                let content = result.data[0]['content'];
-                                                let description = result.data[0]['description'];
-                                                console.log(content)
-                                                console.log(description)
-                                                let html = `${content}`;
-                                                let html2 = `${description}`;
-                                                document.getElementById('menu').innerHTML = html;
-                                                document.getElementById('description2').innerHTML = html2;
-                                            });  
-                                        }
-                                    );
-                                </script>
-                            {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
-                                </li>
-                                <script>
-                                    document.querySelector('#{{comment.author}}').addEventListener(
-                                        'click',
-                                        () => {
-                                            const data = axios({
-                                                url: '/post/comment/get/',
-                                                method: 'get',
-                                                params: {
-                                                    username: "{{comment.author}}",
-                                                }
-                                            });
-                                            data.then(function(result){
-                                                let content = result.data[0]['content'];
-                                                let description = result.data[0]['description'];
-                                                console.log(content)
-                                                console.log(description)
-                                                let html = `${content}`;
-                                                let html2 = `${description}`;
-                                                document.getElementById('menu').innerHTML = html;
-                                                document.getElementById('description2').innerHTML = html2;
-                                            }); 
-                                        }
-                                    );
-                                </script>
-                            {% endif %}
-                        {% endfor %}
+                            {% for comment in post.comment_set.all %}
+                                {% if forloop.first %}
+                                    <li class="nav-item" id="{{forloop.counter0}}">
+                                        <a class="nav-link active" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
+                                        <div id="author" style="display:none">{{comment.author}}</div>
+                                    </li>
+                                    <script>
+                                        document.querySelector('#{{comment.author}}').addEventListener(
+                                            'click',
+                                            () => {
+                                                const data = axios({
+                                                    url: '/post/comment/get/',
+                                                    method: 'get',
+                                                    params: {
+                                                        username: "{{comment.author}}",
+                                                    }
+                                                });
+                                                data.then(function(result){
+                                                    let content = result.data[0]['content'];
+                                                    let description = result.data[0]['description'];
+                                                    let html = `${content}`;
+                                                    let html2 = `${description}`;
+                                                    document.getElementById('menu').innerHTML = html;
+                                                    document.getElementById('description2').innerHTML = html2;
+
+                                                    let f = document.querySelector("#comment_form");
+                                                    let btn = document.querySelector("#comment_btn");
+                                                    
+                                                    if ("{{request.user.username}}" == "{{post.author}}"){
+                                                        f.action = "{% url 'post:select_comment' post.id comment.author%}";
+                                                        btn.innerText = '답변 채택하기';
+                                                    }
+                                                    else{
+                                                        if ("{{comment.author}}" == "{{request.user.username}}"){
+                                                            console.log('a')
+                                                            btn.innerText = '답변 삭제하기';
+                                                            btn.style.display = "block";
+                                                            f.action = "{% url 'post:comment_delete' post.id comment.author%}";
+                                                        }else{
+                                                            console.log('b')
+                                                            console.log("{{comment.author}}")
+                                                            console.log("{{request.user.username}}")
+                                                            btn.style.display = "none";
+                                                        }
+                                                    }
+                                                });  
+                                            }
+                                        );
+                                    </script>
+                                {% else %}
+                                    <li class="nav-item" id="{{forloop.counter0}}">
+                                        <a class="nav-link" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
+                                    </li>
+                                    <script>
+                                        document.querySelector('#{{comment.author}}').addEventListener(
+                                            'click',
+                                            () => {
+                                                const data = axios({
+                                                    url: '/post/comment/get/',
+                                                    method: 'get',
+                                                    params: {
+                                                        username: "{{comment.author}}",
+                                                    }
+                                                });
+                                                data.then(function(result){
+                                                    let content = result.data[0]['content'];
+                                                    let description = result.data[0]['description'];
+                                                    let html = `${content}`;
+                                                    let html2 = `${description}`;
+                                                    document.getElementById('menu').innerHTML = html;
+                                                    document.getElementById('description2').innerHTML = html2;
+
+                                                    let f = document.querySelector("#comment_form");
+                                                    let btn = document.querySelector("#comment_btn");
+
+                                                    if ("{{request.user.username}}" == "{{post.author}}"){
+                                                        f.action = "{% url 'post:select_comment' post.id comment.author%}";
+                                                        btn.innerText = '답변 채택하기';
+                                                    }
+                                                    else{
+                                                        if ("{{comment.author}}" == "{{request.user.username}}"){
+                                                            console.log('a')
+                                                            btn.innerText = '답변 삭제하기';
+                                                            btn.style.display = "block";
+                                                            f.action = "{% url 'post:comment_delete' post.id comment.author%}";
+                                                        }else{
+                                                            console.log('b')
+                                                            btn.style.display = "none";
+                                                        }
+                                                    }
+                                                }); 
+                                            }
+                                        );
+                                    </script>  
+                                {% endif %}
+                            {% endfor %}
                     </ul>
                     <div class="tab-content" style="width:100%; overflow:auto; height:300px">
                         <div class="tab-pane container active" style="white-space:pre-line; margin-top:2px; padding:0">
@@ -219,26 +255,30 @@
                     
                     <button type="submit" class="btn btn-primary" id="comment_btn" style="font-size:12px; padding:7px; float:right">답변 채택하기</button>
                     
-                    {% for comment in post.comment_set.all %}
-                        <script>
-                            let comment_author = $("#author").text()
-                            console.log(comment_author)
-                            if (comment_author == "{{comment.author}}"){
-                                let f = document.querySelector("#comment_form")
-                                let btn = document.querySelector("#comment_btn")
-                                if ("{{request.user.username}}" == "{{post.author}}"){
-                                    f.action = "{% url 'post:select_comment' post.id comment.author%}"
-                                    btn.value = '답변 채택하기';
-                                }
-                                else{
-                                    f.action = "{% url 'post:comment_delete' post.id comment.author%}"
-                                    btn.value = '답변 삭제하기';
-                                }
-                            }else{
-                                console.log('onewonweon')
+                    
+                    <script>
+                        let comment_author = $("#author").text();
+                        let f = document.querySelector("#comment_form");
+                        let btn = document.querySelector("#comment_btn");
+                        {% for comment in post.comment_set.all %}
+                            if ("{{request.user.username}}" == "{{post.author}}"){
+                                f.action = "{% url 'post:select_comment' post.id comment.author%}";
+                                btn.innerText = '답변 채택하기';
                             }
-                        </script>
-                    {% endfor %}
+                            else{
+                                if (comment_author == "{{request.user.username}}"){
+                                    console.log('a')
+                                    btn.innerText = '답변 삭제하기';
+                                    btn.style.display = "block";
+                                    f.action = "{% url 'post:comment_delete' post.id comment.author%}";
+                                }else{
+                                    console.log('b')
+                                    btn.style.display = "none";
+                                }
+                            }
+                        {% endfor %}
+                    </script>
+                    
                 </form>
                 <div class="card-text" style="margin-left: 2%; margin-right: 1%; margin-top:1px; white-space: pre-line;">
                     <p id="description2" style="overflow:auto; height:150px; width:100%">{{post.comment_set.all.0.description}}</p>
@@ -250,14 +290,11 @@
     {% if post.solved %}
         <script>
             const pb = document.getElementById("progress_badge");
-            pb.textContent = "완료"
-            pb.className = "badge rounded-pill bg-secondary"
-            //pb.class = 
+            pb.textContent = "완료";
+            pb.className = "badge rounded-pill bg-secondary";
 
             const pub = document.getElementById("post_update_btn");
             pub.style.display = 'none';
-            //const pdb = document.getElementById("post_delete_btn");
-            //pdb.style.display = 'none';
             const cw = document.getElementById("comment_write");
             cw.style.display = 'none';
             const cb = document.getElementById("comment_btn");
@@ -265,6 +302,15 @@
             const ci = document.getElementById("comment_input");
             ci.style.display = 'none';
         </script>
+        {% for comment in post.comment_set.all %}
+            {% if comment.solved %}
+                <script>
+                    $( document ).ready(function() {
+                        $('#{{forloop.counter}}').before($('#{{forloop.first}}'));
+                    });
+                </script>
+            {% endif%}
+        {%endfor%}
     {% endif%}
 </div>
 {% endblock %}

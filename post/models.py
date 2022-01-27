@@ -35,3 +35,4 @@ class Comment(models.Model):
     content = models.TextField(blank=True)
     register_date = models.DateTimeField()
     choice = models.BooleanField(default=False)
+    check = models.BooleanField(default=False)

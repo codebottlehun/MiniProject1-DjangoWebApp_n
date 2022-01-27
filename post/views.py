@@ -43,7 +43,7 @@ def comment_create(request, post_id):
                 comment.register_date = timezone.now()
                 comment.post = post
                 comment.save()
-                return redirect('post:detail', post_id=post.id)  
+                return redirect('post:detail', post_id=post.id)
     else:
         form = CommentForm()
    
@@ -108,4 +108,11 @@ def comment_delete(request, post_id, author):
     return HttpResponse(post_id, author)
 
 def select_comment(request, post_id, author):
-    return HttpResponse(post_id, author)
+    post = get_object_or_404(Post, id=post_id)
+    comment = get_object_or_404(Comment, author=author)
+    if request.method=="POST":
+        post.sovled = True
+        post.save()
+        comment.choice = True
+        comment.save()
+    return redirect('post:detail', post_id=post.id)

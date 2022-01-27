@@ -43,7 +43,7 @@
                     
                     {% if request.user.is_authenticated %}
                         {% comment %} Put in logout {% endcomment %}
-                        <a role="button" type="button" class="btn btn-secondary position-relative me-2">
+                        <a id="alarmbtn" role="button" type="button" class="btn btn-outline-dark position-relative me-2">
                             &nbsp&nbsp
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -178,28 +178,16 @@
                 <div id="sidebar-wrapper2" class="sticky-top" >
                     <div id="profileView-margin" style="height:100px;"></div>
                     
-                    <div class="card card-body " style="width: 300px;">
+                    <div class="card border-0 m-2 p-2" style="width: 300px; ">
                         {% include "codagram/user_info.html" %}
                         {% include "member/profile.html" %}
-                        <div class="d-flex">
-                            <div class="d-flex p-1 justify-content-center border-0">
-                                <div >
-                                    <button id="new-post" class="btn btn-primary bg-gradient " style="opacity:0.8">
-                                        새 포스팅 쓰기
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="d-flex p-1 justify-content-center border-0" style="opacity:0.9">
-                                <div >
-                                    <button id="new-lecture" class="btn btn-warning bg-gradient" style="font-color:rgb(0,0,0);">
-                                        <a class="text-decoration-none" style="color:rgb(255,255,255); ">
-                                        신규 강좌 개설
-                                        </a>
-                                    </button>
-                                </div>
-                            </div>
+
+                        <div id="new-post" class="flex-fill align-items-center btn btn-warning bg-gradient fw-bold mx-2 my-1 p-2" style="opacity:0.8;" >
+                            Codagram</br>글 쓰기
                         </div>
-                    
+                        <div id="new-lecture" class="flex-fill align-items-center btn btn-primary bg-gradient fw-bold mx-2  p-2" style="font-color:rgb(0,0,0);">
+                            'Player' Ground</br> 입장하기
+                        </div>
                     </div>
                     <div id="profileView-margin" style="height:100px;"></div>
                 </div>
@@ -214,7 +202,7 @@
                 <div>
             </div>
         </main>
-
+    
 
     <div class="mb-auto mt-auto border-top mt-3 border-top">
         <div class="container ">
@@ -227,8 +215,88 @@
             </div>
     </div>
 
+
+    <!-- 모달을 열기 위한 버튼 -->
+    <button type="button" style="display: none" class="btn btn-primary btn-lg" id="openModalBtn">
+    </button>
+    <button type="button" style="display: none" class="btn btn-primary btn-lg" id="openModalBtn2">
+    </button>
+    <!-- 모달 영역 -->
+    <div id="modalBox" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Alarm List</h5>
+            </div>
+            <div class="modal-body">
+              {% if alarm_list %}
+                {% for d in alarm_list %}
+                    {% include "member/_post_card.html" %}
+                {% endfor %}
+              {% endif %}
+            </div>
+            <div class="modal-footer">
+              <button id="modalBox_confirm" type="button" class="btn btn-primary">Confirm</button>
+              <button id="modalBox_close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="modalBox2" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header mt-3">
+            </div>
+            <div class="modal-body">
+              <p> 
+              {% for message in messages %}
+                    {{ message.message  }}
+              {% endfor %}
+            </p>
+            </div>
+            <div class="modal-footer">
+              <button id="modalBox_close2" type="button" class="btn btn-primary" data-dismiss="modal">OK!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
     <script>
     $(function () {
+        // alarm
+        $('#openModalBtn').on('click', function(){
+            $('#modalBox').modal('show');
+                console.log("click open");
+        });
+
+        $('#modalBox_confirm').on('click', function(){
+            //$('#modalBox').modal('hide');
+            window.location.href = '{% url "codagram:reset_alarm"%}';
+            //window.location.href = '{% url "member:check_alarm"%}';
+            
+        });
+
+        $('#modalBox_close').on('click', function(){
+            $('#modalBox').modal('hide');
+            console.log("click close");
+        });
+
+        // message
+        $('#openModalBtn2').on('click', function(){
+            $('#modalBox2').modal('show');
+                console.log("click open");
+        });
+        $('#modalBox_close2').on('click', function(){
+            $('#modalBox2').modal('hide');
+            console.log("click close");
+        });
+        
+
+            
+    
+    
         //Keep track of last scroll
         var submenuHide = false;
 
@@ -320,6 +388,8 @@
         document.getElementById("searchBtn").addEventListener("click", javascript_onclik_searchBtn);
         document.getElementById("new-post").addEventListener("click", javascript_onclik_newpost);
         document.getElementById("new-lecture").addEventListener("click", javascript_onclik_newlecture);
+        document.getElementById("alarmbtn").addEventListener("click", javascript_onclik_modal1);
+        
         var searchBtn_On = false;
         function javascript_onclik_searchBtn(){
                 if (searchBtn_On){
@@ -337,7 +407,10 @@
             location.href = "{% url 'post:post_create' %}";
         }
         function javascript_onclik_newlecture(){
-            location.href = "{% url 'post:post_create' %}";
+            location.href = "{% url 'lecture:index' %}";
+        }
+        function javascript_onclik_modal1(){
+            document.getElementById("openModalBtn").click();
         }
 
         let titletmp = "Codagram " + ("{{request.path}}").replace('/', '· ');
@@ -346,6 +419,11 @@
         }
         titletmp = replaceAll(titletmp, '/', '-')
         document.title = titletmp ;
+
+        {% if messages %}
+            document.getElementById("openModalBtn2").click();
+        {% endif %}
+
 
         //document.getElementById("new-post").addEventListener("click", javascript_onclikc);
         //function javascript_onclikc(){

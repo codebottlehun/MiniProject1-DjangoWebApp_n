@@ -17,17 +17,6 @@ class Video(models.Model):
         ordering = ['-added']
 
 '''
-memo model(임시)
-'''
-class Memo(models.Model):
-    subject = models.CharField(max_length=200)
-    content = models.TextField()
-    create_date = models.DateTimeField()
-
-    def __str__(self):
-        return self.subject
-
-'''
 vote model
 '''
 class Question(models.Model): 
@@ -57,4 +46,5 @@ class Message(models.Model):
 memo
 '''
 class MemoLecture(models.Model):
-    text = models.TextField()
+    text = models.TextField(blank='True')
+    user = models.TextField(default='0')

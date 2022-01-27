@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Video,Memo, Question
+from .models import Video, Question
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.shortcuts import render, get_object_or_404
 from .models import Question, Choice
@@ -18,8 +18,7 @@ video 관련 view
 
 def index(request):
     videos = Video.objects.all()
-    memos = Memo.objects.all()
-    return render(request, 'lecture/index.html', context={'videos':videos, 'memos':memos})
+    return render(request, 'lecture/index.html', context={'videos':videos})
 
 def input_video(request):
     if request.method == "GET": 
@@ -117,59 +116,22 @@ def chat_room(request):
 '''
 def memo(request):
     if request.method == "GET": 
-        model = MemoLecture.objects.all()
-        text = ''
-        for i in model:
-            text += i.text + '\n'
-        form = MemoForm(initial={'text' : text})
-        return render(request, 'lecture/memo.html', {'f':form, 'memo':model})
+        try:
+            model = MemoLecture.objects.get(user=request.user)
+        except MemoLecture.DoesNotExist :
+            model = MemoLecture.objects.create(user=request.user)
+
+        # text = ''
+        # for i in model:
+        #     text += i.text + '\n'
+        form = MemoForm(initial={'text' : model.text})
+        return render(request, 'lecture/memo.html', {'f':form})
     elif request.method == "POST":
         form = MemoForm(request.POST)
-        # if form.is_valid():
-        model = MemoLecture.objects.all()
-        model.delete()
-        q = form.save(commit=False)
-        q.save()
+        if form.is_valid():
+            model = MemoLecture.objects.get(user=request.user)
+            model.delete()  
+            q = form.save(commit=False)
+            q.user = request.user
+            q.save()
         return HttpResponseRedirect(reverse('lecture:memo'))
-
-'''
-안씀
-'''
-
-def home(request):
-    return render(request, 'home.html')
-
-def room(request, room):
-    username = request.GET.get('username')
-    room_details = Room.objects.get(name=room)
-    return render(request, 'room.html', {
-        'username': username,
-        'room': room,
-        'room_details': room_details
-    })
-
-def checkview(request):
-    room = request.POST['room_name']
-    username = request.POST['username']
-    
-    if Room.objects.filter(name=room).exists():
-        return redirect('lecture/'+room+'/?username='+username)
-    else:
-        new_room = Room.objects.create(name=room)
-        new_room.save()
-        return redirect('lecture/'+room+'/?username='+username)
-    
-def send(request):
-    message = request.POST['message']
-    username = request.POST['username']
-    room_id = request.POST['room_id']
-
-    new_message = Message.objects.create(value=message, user=username, room=room_id)
-    new_message.save()
-    return HttpResponse('Message sent successfully')
-
-def getMessages(request, room):
-    room_details = Room.objects.get(name=room)
-
-    messages = Message.objects.filter(room=room_details.id)
-    return JsonResponse({"messages":list(messages.values())})

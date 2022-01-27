@@ -1,8 +1,6 @@
-from pyexpat.errors import messages
 from django.http import HttpResponse, JsonResponse
 from django.forms import model_to_dict
 from django.shortcuts import render, get_object_or_404, redirect
-from tables import Description
 from .models import Post, Comment
 from django.utils import timezone
 from .forms import PostForm, CommentForm
@@ -24,25 +22,33 @@ def detail(request, post_id):
 @login_required
 def comment_create(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    # author = request.user.username
-    # # c = Comment.objects.filter(author=author)
-    # # if c.count()==1:
-    # #     return HttpResponse('ok')
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.user = request.user
-            #comment.author = request.session['user_id'] JBH
-            comment.author = request.user.username
-            comment.register_date = timezone.now()
-            comment.post = post
-            comment.save()
-            return redirect('post:detail', post_id=post.id)
+    author = request.user.username
+    if request.method == 'POST':
+        try:
+            comment = Comment.objects.get(author=author)
+            if request.method == "POST":
+                if request.POST.get('content')!=None:
+                    comment.content = request.POST.get('content')
+                if request.POST.get('description')!=None:
+                    comment.description = request.POST.get('description')
+                if request.POST.get('content')!=None or request.POST.get('description')!=None:
+                    comment.save()
+                    return redirect('post:detail', post_id=post.id)
+        except:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.user = request.user
+                comment.author = request.user.username
+                comment.register_date = timezone.now()
+                comment.post = post
+                comment.save()
+                return redirect('post:detail', post_id=post.id)  
     else:
         form = CommentForm()
-    context = {'post': post, 'form': form}
-    return render(request, 'post/comment_detail.html', context)
+   
+    # context = {'post': post, 'form': form}
+    # return render(request, 'post/comment_detail.html', context)
 
 @login_required
 def post_create(request):
@@ -97,3 +103,9 @@ def comment_get(request):
     d = model_to_dict(c)
     data.append(d)
     return JsonResponse(data, safe=False)
+
+def comment_delete(request, post_id, author):
+    return HttpResponse(post_id, author)
+
+def select_comment(request, post_id, author):
+    return HttpResponse(post_id, author)

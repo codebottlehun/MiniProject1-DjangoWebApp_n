@@ -5,9 +5,10 @@ from django.forms import TextInput, Textarea
 class CommentForm(forms.ModelForm):
   class Meta:
     model = Comment
-    fields = ['content']
+    fields = ['description', 'content']
     labels = {
-      'content': '답변내용',
+      'description': '코드 설명',
+      'content': '코드 수정',
     }
 
 class PostForm(forms.ModelForm):

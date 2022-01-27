@@ -9,6 +9,8 @@ urlpatterns = [
     path('codagram/', include('codagram.urls')),
     path('member/', include('member.urls')),
     path('post/', include('post.urls')),
+    path('lecture/', include('lecture.urls')), #lecture
+    
     path('identicon/image/<path:data>/', pydenticon_image, name='pydenticon_image'),
     path('', RedirectView.as_view(pattern_name='codagram:index')),
     path('accounts/login/', RedirectView.as_view(pattern_name='codagram:index')), # logout

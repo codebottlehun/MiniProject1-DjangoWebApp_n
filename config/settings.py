@@ -23,21 +23,33 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    #'debug_toolbar',
     #third apps
     'django_extensions',
-    #'debug_toolbar',
+    
     'ckeditor',
     'django_pydenticon', #JBH, It is to help you paint the unspecified photo in profile.
     'easy_thumbnails', #JBH, It is to help you resize the image file.
     'bootstrap5',
+    'embed_video', #lecture
+    'channels',
 
     #local apps
     'codagram',
     'member', # Jeon_SH
     'post', #JHS
+    'lecture', #lecture
 
 ]
+
+# Channels 김동현
+ASGI_APPLICATION = 'config.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -46,8 +58,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #debug
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]

@@ -13,8 +13,10 @@ def index(request):
 
 def detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+    comments = Comment.objects.filter(post_id=post_id).order_by("-choice")
     context = { 
         'post': post,
+        'comments':comments,
     }
     return render(
         request, 'post/post_detail.html', context)
@@ -43,12 +45,10 @@ def comment_create(request, post_id):
                 comment.register_date = timezone.now()
                 comment.post = post
                 comment.save()
-                return redirect('post:detail', post_id=post.id)  
+                return redirect('post:detail', post_id=post.id)
     else:
         form = CommentForm()
-   
-    # context = {'post': post, 'form': form}
-    # return render(request, 'post/comment_detail.html', context)
+
 
 @login_required
 def post_create(request):
@@ -61,6 +61,15 @@ def post_create(request):
             post.author = request.user.username
             post.register_date = timezone.now()
             post.save()
+
+            # tags = form.cleaned_data['tags'].split(',')
+            # for tag in tags:
+            #     if not tag:
+            #         continue
+            #     tag = tag.strip()
+            #     _tag, _ = Tag.objects.get_or_create(name=tag)
+
+            #     post.tags += _tag
             return redirect('post:index')
     else:
         form = PostForm()
@@ -105,7 +114,25 @@ def comment_get(request):
     return JsonResponse(data, safe=False)
 
 def comment_delete(request, post_id, author):
-    return HttpResponse(post_id, author)
+    post = Post.objects.get(id=post_id)
+    comment = Comment.objects.get(author=author)
+    comment.delete()
+    return redirect('post:detail', post_id=post.id)
 
 def select_comment(request, post_id, author):
-    return HttpResponse(post_id, author)
+    post = get_object_or_404(Post, id=post_id)
+    comment = get_object_or_404(Comment, author=author)
+    if request.method=="POST":
+        post.solved = True
+        post.save()
+        comment.choice = True
+        comment.save()
+    return redirect('post:detail', post_id=post.id)
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user in post.like_users.all():
+        post.like_users.remove(request.user)
+    else:
+        post.like_users.add(request.user)

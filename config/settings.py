@@ -33,12 +33,14 @@ INSTALLED_APPS = [
     'bootstrap5',
     'embed_video', #lecture
     'channels',
+    'tagging.apps.TaggingConfig',
 
     #local apps
     'codagram',
     'member', # Jeon_SH
     'post', #JHS
     'lecture', #lecture
+    'tag', #JHS
 
 ]
 

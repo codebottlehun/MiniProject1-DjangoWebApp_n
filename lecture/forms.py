@@ -32,7 +32,15 @@ class VideoForm(ModelForm):
     def __init__(self, *args, **kwarg):
         super().__init__(*args, **kwarg)
         self.fields['title'].label = "Title"
+        self.fields['title'].widget.attrs = {
+            'class': 'form-control',
+            'rows': 1
+        }
         self.fields['url'].label="URL"
+        self.fields['url'].widget.attrs = {
+            'class': 'form-control',
+            'rows': 3
+        }
 
 class MemoForm(ModelForm):
     class Meta:

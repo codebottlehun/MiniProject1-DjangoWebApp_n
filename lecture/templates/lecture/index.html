@@ -24,26 +24,26 @@
 
     {% if request.user.is_authenticated %}
 
-    
+    <!-- Modal -->
+    <div class="modal fade h-100" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" style="height: 50%;">
+        <div class="modal-content" style="height: 100%;">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">CodaTube</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="location.reload()"></button>
+            </div>
+            <div class="modal-body h-100">
+                <iframe src='/lecture/input_video/' width='100%' height='100%'> </iframe>
+            </div>
+        </div>
+        </div>
+    </div>
 
     <!-- 네비게이션바 -->
     <!-- 버튼 그룹이랑 합침 -->
-    <body>
+    <body style="background-color:#e3f2fd">
 
-        <!-- Modal -->
-        <div class="modal fade h-100" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="height: 50%;">
-            <div class="modal-content" style="height: 100%;">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">CodaTube</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body h-100">
-                    <iframe src='/lecture/input_video/' width='100%' height='100%'> </iframe>
-                </div>
-            </div>
-            </div>
-        </div>
+        
 
 
         <nav class="navbar navbar-light sticky-top justify-content-start" style="background-color: #e3f2fd;">
@@ -94,23 +94,41 @@
                                 <!-- <a class="nav-link" href="#">Link</a> -->
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:2em; margin-top: 10px; text-align: center; color: black;">
-                                    AIVLE 수업 목록
+                                <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:2em; margin-top: 10px; text-align: center; color: black;">
+                                    튜터 강의
                                 </a>
+
                                 
                                 <ul id="dmenu" class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
                                     
-                                    <!-- 강의 리스트 구현 -->
-                                    
-                                    <script>
-                                        // function url_send(){
-                                        //     var tmp_video = item.url
-                                        //     document.getElementById("video_main").src = tmp_video
-                                        // }
-                                        // $('#video_main').on({ 'click': function(){ $('#video_main').attr('src','{{item.url}}'); } });
-                                    </script>
+                
 
-                                    {% for item in videos %}
+                                    {% for item in video_tuttor %}
+                                    <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
+                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'">{{ item.title }}</a></li>
+                                    {% endfor %}
+
+                                    <!-- <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li> -->
+                                <!-- <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                                
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:2em; margin-top: 10px; text-align: center; color: black;">
+                                    자유 강의
+                                </a>
+
+                                
+                                <ul id="dmenu" class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
+                                    
+                
+
+                                    {% for item in videos_aibler %}
                                     <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
                                     <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'">{{ item.title }}</a></li>
                                     {% endfor %}
@@ -290,30 +308,12 @@
                             <div class="text-center h-100">
                                 <div class="w-100 h-100">
 
-                                    <script>
-                                        function go(){
-                                            var number = document.location.href.split("?")[1];
-                                        
-                                            // alert("number : "+number);
-
-                                            var tmp = "videos."+number+".url"
-
-                                            // alert("url : "+tmp)
-
-                                            var tmptmp = "{{videos.0.url}}"
-
-                                            // alert("tmptmp : "+tmptmp)
-                                        }
-                                        
-
-                                    </script>
+                                    
                                 
                                     <!-- video 재생 화면 생성 -->
                                         <div class="w-100 h-100">
-                                            <script>
-                                                go()
-                                            </script>
-                                            <iframe id="video_main" width="100%" height="100%" src="https://www.youtube.com/embed/Dxp_CFpP01I"
+                                            
+                                            <iframe id="video_main" width="100%" height="100%" src='/lecture/empty_page/'
                                             title="YouTube video player" frameborder="0" 
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                             allowfullscreen></iframe>

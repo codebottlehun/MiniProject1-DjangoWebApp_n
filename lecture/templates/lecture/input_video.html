@@ -32,12 +32,15 @@
 
 <div id="btngroup" class="btn-group" style="margin-right: 10px; float:right;">
     <form method="get">
-        <button type="submit"  class="btn btn-primary" style="margin-right: 10px;">REGISTER</button>
+        <button type="submit"  class="btn btn-primary" style="margin-right: 10px;" onclick="location.reload()">REGISTER</button>
+        <script>
+            function to(){                
+                alert("데이터 등록 완료")
+            }
+            
+        </script>
     </form>
 
-    <form method="get" action="{% url 'lecture:vote_index' %}">
-        <button type="submit" class="btn btn-primary">CLOSE</button>
-    </form>
     <div>
 </form>
 

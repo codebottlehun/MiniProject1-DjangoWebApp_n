@@ -59,6 +59,50 @@ def my_paper(request) :
 
     post.order_by('-register_date')
 
+    post_p = Paginator(post, 3)
+    post_data = post_p.page(post_page)
+
+    post_start_page = (post_page -1) //10 *10 + 1
+    post_end_page = post_start_page + 9
+    if post_end_page > post_p.num_pages :
+        post_end_page = post_p.num_pages
+
+    # 내가 쓴 글 리스트업 작업
+    com_page = request.GET.get('com_page', 1)
+
+    comment = Comment.objects.filter(user_id = id)
+
+    comment.order_by('-register_date')
+
+    com_p = Paginator(comment, 3)
+    com_data = com_p.page(com_page)
+
+    com_start_page = (com_page -1) //5 *5 + 1
+    com_end_page = com_start_page + 4
+    if com_end_page > com_p.num_pages :
+        com_end_page = com_p.num_pages
+
+    context = {
+        'post_data' : post_data, 
+        'post_range' : range(post_start_page, post_end_page),
+        'com_data' : com_data, 
+        'com_range' : range(com_start_page, com_end_page),
+        'post_page' : post_page, 
+        'com_page' : com_page,
+    }
+
+    return context
+
+def my_page(request) :
+    # mypage에 들어갈 데이터 조회
+    # 내가 쓴 글 리스트업 작업
+    post_page = int(request.GET.get('wri_page', 1))
+
+    id = request.user.id
+    post = Post.objects.filter(user_id = id)
+
+    post.order_by('-register_date')
+
     post_p = Paginator(post, 5)
     post_data = post_p.page(post_page)
 
@@ -91,12 +135,6 @@ def my_paper(request) :
         'com_page' : com_page,
     }
 
-    return context
-
-def my_page(request) :
-    # mypage에 들어갈 데이터 조회
-    context = my_paper(request)
-
     return render(request, 'member/mypage.html', context)
 
 def delete(request) :
@@ -125,8 +163,9 @@ def alarm(request) :
     data = []
     for p in post :
         for c in Comment.objects.filter(check=False, post_id=p.id) :
-            data.append(model_to_dict(c))
-
+            c_appen = model_to_dict(c)
+            c_appen['post_subject'] = c.post.subject
+            data.append(c_appen)
     return JsonResponse(data, safe=False)
 
 def check_alarm(request) :
@@ -137,6 +176,12 @@ def check_alarm(request) :
         for c in comment :
             c.check = True
             c.save()
+
+def click_alarm(request) :
+    source = alarm(request)
+    data = json.loads(source.content)
+    check_alarm(request)
+    return render(request, 'member/index.html', {'data':data})
 
 def search(request, keyword) :
     # 검색 기능

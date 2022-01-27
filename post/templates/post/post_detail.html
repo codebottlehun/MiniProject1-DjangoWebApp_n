@@ -14,8 +14,8 @@
         <div class="card-text" style="margin-left: 1%; margin-right: 1%; margin-top:1px; white-space: pre-line; overflow:auto; height:150px">
             {{post.description}}
         </div>
-        <div class="card-footer", style="text-align:right; font-size:0.8em">
-            <div id="update" style="display:inline">
+        <div class="card-footer", style="font-size:0.8em">
+            <div id="update" style="display:inline; text-align:right;">
                 <form action="{% url 'post:post_update' post.id%}" method="get" class="my-3" style="display:inline">
                     {% csrf_token %}
                     <!-- 오류표시 Start -->
@@ -51,7 +51,7 @@
                     
                 </form>
             </div>
-            <div style="display:inline">{{ post.register_date }}</div>
+            <div style="text-align:right; display:inline">{{ post.register_date }}</div>
             <script>
                 if ("{{request.user.username}}" == "{{post.author}}"){
                     document.getElementById("update").style.display = "block";
@@ -83,7 +83,7 @@
                 <div style="margin-left:2%; margin-right:5%">
                     
                     <ul id="nav-tabs" class="nav nav-tabs border-bottom" style="margin-top:0.5em" id="my">
-                            {% for comment in post.comment_set.all %}
+                            {% for comment in comments %}
                                 {% if forloop.first %}
                                     <li class="nav-item" id="{{forloop.counter0}}">
                                         <a class="nav-link active" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
@@ -182,7 +182,7 @@
                                 {% endif %}
                             {% endfor %}
                     </ul>
-                    <script>document.querySelector("#nav-tabs").BsNavPaginator(2, "nav-link");</script>
+                    <script>document.querySelector("#nav-tabs").BsNavPaginator(4, "nav-link");</script>
                     <div class="tab-content" style="width:100%; overflow:auto; height:300px">
                         <div class="tab-pane container active" style="white-space:pre-line; margin-top:2px; padding:0">
                             <p id='menu'>{{post.comment_set.all.0.content}}</p>

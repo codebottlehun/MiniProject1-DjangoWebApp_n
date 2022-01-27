@@ -111,7 +111,7 @@ def select_comment(request, post_id, author):
     post = get_object_or_404(Post, id=post_id)
     comment = get_object_or_404(Comment, author=author)
     if request.method=="POST":
-        post.sovled = True
+        post.solved = True
         post.save()
         comment.choice = True
         comment.save()

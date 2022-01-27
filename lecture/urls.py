@@ -4,7 +4,7 @@ from .views import *
 app_name = 'lecture'
 
 urlpatterns = [
-    path('',index),
+    path('',index, name='index'),
     path('input_video/',input_video,name='input_video'),
     
     # vote url

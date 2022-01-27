@@ -5,7 +5,11 @@ django-debug-toolbar
 django-bootstrap-v5
 django-pydenticon
 django-ckeditor
+django-embed-video
 
 
 pillow
 easy-thumbnails
+
+channels
+channels_redis

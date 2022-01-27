@@ -1,0 +1,303 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<style>
+    html, body {
+        margin:0;
+        width: 100%;
+        height: 95%;
+    }
+</style>
+
+
+<html lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <title>AIVLE SCHOOL</title>
+
+    {% if request.user.is_authenticated %}
+
+    <!-- 네비게이션바 -->
+    <!-- 버튼 그룹이랑 합침 -->
+    <body>
+        <nav class="navbar navbar-light sticky-top justify-content-start" style="background-color: #e3f2fd;">
+            <div class="container-fluid">
+            
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <!-- offcanvas-start 로 왼쪽 정렬 -->
+
+                    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                        <div class="offcanvas-header">
+                            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h5>
+                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/codagram/">Home</a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li> -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    AIVLE 수업 목록
+                                </a>
+                                
+                                
+                                
+
+                                <ul id="dmenu" class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
+                                    
+                                    <!-- 강의 리스트 구현 -->
+                                    
+                                    <script>
+                                        // function url_send(){
+                                        //     var tmp_video = item.url
+                                        //     document.getElementById("video_main").src = tmp_video
+                                        // }
+                                        // $('#video_main').on({ 'click': function(){ $('#video_main').attr('src','{{item.url}}'); } });
+                                    </script>
+
+                                    {% for item in videos %}
+                                    <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
+                                    <li><a class="dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'">{{ item.title }}</a></li>
+                                    {% endfor %}
+
+                                    <!-- <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li> -->
+                                <!-- <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                                
+                                </ul>
+                            </li>
+                            </ul>
+
+                            <script>
+                                // $('.dmenu').each(function(){
+                                //     // let today = new Date();   
+                                //     // let month = today.getMonth()+1
+                                //     // let day = today.getDate()
+                                //     // return month+"월 "+day+"일"
+                                //     var titles= videos.title
+                                //     const li = document.createElement("li");
+                                //     li.setAttribute('id',titles[0])
+
+                                //     const textNode = document.createTextNode(titles[0])
+                                //     li.appendChild(textNode)
+
+                                //     document.getElementById('dmenu').appendChild(li)
+                                // });
+
+                                // function action_add(){
+                                //     var tmp = 123
+                                //     var dmenu = $("#dmenu");
+                                //     dmenu.append("<li>"+tmp+"</li>");
+                                // }
+                                
+                            </script>
+
+                            <form class="d-flex">
+                            <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+                            <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- <div class="container">
+                        <a class="navbar-brand text-center" href="#"><h5>Aivle</h5></a>
+                    </div> -->
+
+                    <button class="btn btn-primary btn-dark" type="button"><a href="lecture/input_video/">Open</a></button>
+
+                    <!-- 버튼 그룹 -->
+
+                    <div id="btngroup" class="btn-group" style="margin-right: 10px; float:right;">
+                        <button id="btn_chat" onclick="resizeScreen(this.id)" type="button" class="btn btn-primary">Chat</button>
+                        <button id="btn_vote" onclick="resizeScreen(this.id)" type="button" class="btn btn-primary">Vote</button>
+                        <button id="btn_memo" onclick="resizeScreen(this.id)" type="button" class="btn btn-primary">Memo</button>
+                        <!-- <button onclick="resizeScreen()" class="btn btn-primary btn-dark" type="button">Open</button> -->
+                    </div>
+                </div>
+                <!-- </nav>
+                
+                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom justify-content-end"> -->
+                    <!-- 버튼 그룹 -->
+                    <!-- <div class="container-fluid ">
+                        
+
+                    </div> -->
+                
+                <!-- <div>
+                    <button onclick="resizeScreen()" class="btn btn-primary" type="button" style="margin-left: 10px; margin-right: 10px">Click!!</button>
+                </div> -->
+            </div>
+            </nav>
+
+        <script>
+
+            function url_send(){
+
+            }
+
+            // 화면 비율 변경 코드
+            function resizeScreen(clicked_id) {
+                var videoContainer = document.getElementById('video');
+                var chatContainer = document.getElementById('chat')
+                var voteContainer = document.getElementById('vote')
+                var memoContainer = document.getElementById('memo')
+                var btnContainer = document.getElementById('btngroup')
+                if(videoContainer.style.width === '100%'){
+                    videoContainer.style.width = '70%';
+                    videoContainer.style.height = '100%';
+
+                    if(clicked_id=="btn_chat"){
+                        chatContainer.style.display = 'block';
+                        chatContainer.style.width = '30%';
+                    }else if(clicked_id=="btn_vote"){
+                        voteContainer.style.display = 'block';
+                        voteContainer.style.width = '30%';
+                    }else if(clicked_id=="btn_memo"){
+                        memoContainer.style.display = 'block';
+                        memoContainer.style.width = '30%';
+                    }
+                    
+                    // btnContainer.style.display = 'block';
+                }else{
+                    // videoContainer.style.width = '100%';
+                    // videoContainer.style.height = '100%'; 
+
+                    voteContainer.style.display = 'none';
+                    memoContainer.style.display = 'none';
+                    chatContainer.style.display = 'none';
+
+                    if(clicked_id=="btn_chat"){
+                        // voteContainer.style.display = 'none';
+                        // memoContainer.style.display = 'none';
+                        if(chatContainer.style.width == '30%'){
+                            chatContainer.style.display = 'none';
+                            videoContainer.style.width = '100%';
+                            videoContainer.style.height = '100%'; 
+                        }else{
+                            chatContainer.style.display = 'block';
+                            chatContainer.style.width = '30%';
+                        }
+                    }else if(clicked_id=="btn_vote"){
+                        voteContainer.style.display = 'block';
+                        voteContainer.style.width = '30%';
+                        // chatContainer.style.display = 'none';
+                        // memoContainer.style.display = 'none';
+                        if(voteContainer.style.width == '30%'){
+                            voteContainer.style.display = 'none';
+                            videoContainer.style.width = '100%';
+                            videoContainer.style.height = '100%'; 
+                        }else{
+                            voteContainer.style.display = 'block';
+                            voteContainer.style.width = '30%';
+                        }
+                    }else if(clicked_id=="btn_memo"){
+                        // chatContainer.style.display = 'none';
+                        // voteContainer.style.display = 'none';
+                        if(memoContainer.style.width == '30%'){
+                            memoContainer.style.display = 'none';
+                            videoContainer.style.width = '100%';
+                            videoContainer.style.height = '100%'; 
+                        }else{
+                            memoContainer.style.display = 'block';
+                            memoContainer.style.width = '30%';
+                        }
+                    }
+                    
+                    // btnContainer.style.display = 'none';
+                }
+            }
+        </script>
+
+    </body>
+
+    <head>
+        <body>
+            <div class="container-fluid h-100" style="margin-top:10px">
+                <div class="row h-100">
+                    <div id="video" class="col w-100 h-100 mx-0 my-0">
+                        <div class="row h-100">
+                            <div class="text-center h-100">
+                                <div class="w-100 h-100">
+
+                                    <script>
+                                        function go(){
+                                            var number = document.location.href.split("?")[1];
+                                        
+                                            // alert("number : "+number);
+
+                                            var tmp = "videos."+number+".url"
+
+                                            // alert("url : "+tmp)
+
+                                            var tmptmp = "{{videos.0.url}}"
+
+                                            // alert("tmptmp : "+tmptmp)
+                                        }
+                                        
+
+                                    </script>
+                                
+                                    <!-- video 재생 화면 생성 -->
+                                        <div class="w-100 h-100">
+                                            <script>
+                                                go()
+                                            </script>
+                                            <iframe id="video_main" width="100%" height="100%" src="https://www.youtube.com/embed/Dxp_CFpP01I"
+                                            title="YouTube video player" frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen></iframe>
+                                            <!-- <div class="d-flex justify-content-start">
+                                                {{ item.title}}
+                                            </div> -->
+                                        </div> 
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 오른쪽 등장 화면 각 버튼 기능 -->
+                        <div id="chat" class="col-0 w-0 h-100 mx-0 my-0" style="display:none">
+                            <iframe src='/lecture/chat/' width='100%' height='100%'> </iframe>
+                        </div>
+                        <div id="vote" class="col-0 w-0 h-100 mx-0 my-0" style="display:none">
+                            <iframe src='/lecture/index/' width='100%' height='100%'> </iframe>
+                        </div>
+                        <div id="memo" class="col-0 w-0 h-100 mx-0 my-0" style="display:none">
+
+                            <iframe src='/lecture/memo/' width='100%' height='100%'> </iframe>
+
+                        </div>
+                </div>
+            </div>
+        </body>
+    </head>
+
+    {% else %}
+
+    <body>
+        <div class="alert alert-primary" role="alert" style="float:center">
+            Please Login <a href="../codagram/" class="alert-link">go to mainpage</a>
+        </div>
+    </body>
+</html>
+
+{% endif %}

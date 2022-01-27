@@ -56,8 +56,6 @@ def post_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            tags = form.cleaned_data['tags'].split(',')
-
             post = form.save(commit=False)
             post.user = request.user
             #post.author = request.session['user_id'] JBH
@@ -65,9 +63,11 @@ def post_create(request):
             post.register_date = timezone.now()
             post.save()
 
+            tags = form.cleaned_data['tags'].split(',')
             for tag in tags:
                 if not tag:
                     continue
+                tag = tag.strip()
                 _tag, _ = Tag.objects.get_or_create(name=tag)
                 post.tags.add(_tag)
             return redirect('post:index')
@@ -128,3 +128,11 @@ def select_comment(request, post_id, author):
         comment.choice = True
         comment.save()
     return redirect('post:detail', post_id=post.id)
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user in post.like_users.all():
+        post.like_users.remove(request.user)
+    else:
+        post.like_users.add(request.user)

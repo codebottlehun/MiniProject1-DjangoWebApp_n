@@ -1,6 +1,6 @@
 from django import forms
 from .models import Post, Comment
-from django.forms import TextInput, Textarea
+from django.forms import CharField, TextInput, Textarea
 
 class CommentForm(forms.ModelForm):
   class Meta:
@@ -14,7 +14,8 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
   class Meta:
     model = Post
-    fields = ['subject', 'description', 'content']
+    fields = ['subject', 'description', 'content', 'tags']
+    tag=forms.CharField(required=False, label='태그')
     widgets = {
         'subject': TextInput(attrs={
             'class':'form-control',
@@ -24,6 +25,10 @@ class PostForm(forms.ModelForm):
             'class':'form-control',
             'width':'100%',
             'rows': 5,
+        }),
+        'tags': TextInput(attrs={
+            'class':'form-control',
+            'width':'100%',
         }),
     }
     labels = {

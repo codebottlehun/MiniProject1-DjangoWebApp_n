@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'member', # Jeon_SH
     'post', #JHS
     'lecture', #lecture
+    'tag', #JHS
 
 ]
 

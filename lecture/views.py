@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Question, Choice
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse
-from .forms import QuestionForm, ChoiceForm
+from .forms import QuestionForm, ChoiceForm, VideoForm, MemoForm
 from datetime import datetime
 from .models import Room,Message,MemoLecture
 from django.http import HttpResponse, JsonResponse
@@ -22,12 +22,26 @@ def index(request):
     return render(request, 'lecture/index.html', context={'videos':videos, 'memos':memos})
 
 def input_video(request):
-    if request.method == 'POST':
-        video = Video()
-        video.url = request.POST['url']
-        video.save()
-        return render(request, 'codagram/index.html')
-    return redirect('lecture/index.html')
+    if request.method == "GET": 
+        form = VideoForm()
+        return render(request, 'lecture/input_video.html', {'f':form})
+    elif request.method == "POST":
+        form = VideoForm(request.POST)
+        if form.is_valid():
+            q = form.save(commit=False)
+
+            '''
+            url 입력시 embed url로 변환
+            '''
+            tmp_q = q.url
+            tmp_q_spl = tmp_q.split('youtu.be')
+            try:
+                q.url = tmp_q_spl[0]+"youtube.com/embed"+tmp_q_spl[1]
+
+                q.save()
+            except:
+                return HttpResponseRedirect(reverse('lecture:input_video'))
+            return HttpResponseRedirect(reverse('lecture:input_video'))
 
 '''
 투표 관련 view
@@ -102,14 +116,21 @@ def chat_room(request):
 메모 관련 view
 '''
 def memo(request):
-    if request.method == 'POST':
-        post = MemoLecture()
-        post.text = request.POST.get('text')
-        post.save()
-        return render(request, 'lecture/memo.html', {'post':post})
-    else:
-        post = MemoLecture.objects.all()
-        return render(request, 'lecture/memo.html', {'post':post})
+    if request.method == "GET": 
+        model = MemoLecture.objects.all()
+        text = ''
+        for i in model:
+            text += i.text + '\n'
+        form = MemoForm(initial={'text' : text})
+        return render(request, 'lecture/memo.html', {'f':form, 'memo':model})
+    elif request.method == "POST":
+        form = MemoForm(request.POST)
+        # if form.is_valid():
+        model = MemoLecture.objects.all()
+        model.delete()
+        q = form.save(commit=False)
+        q.save()
+        return HttpResponseRedirect(reverse('lecture:memo'))
 
 '''
 안씀

@@ -1,0 +1,9 @@
+{% extends "codagram/layout.html" %}
+
+{% block content %}
+
+    {% for d in data %}
+        {% include "member/_post_card.html" %}
+    {% endfor %}
+
+{% endblock %}

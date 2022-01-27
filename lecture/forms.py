@@ -2,7 +2,7 @@
 
 from cProfile import label
 from django.forms.models import ModelForm 
-from .models import Question, Choice
+from .models import Question, Choice, Video, MemoLecture
 
 class QuestionForm(ModelForm):
     class Meta:
@@ -23,3 +23,26 @@ class ChoiceForm(ModelForm):
         super().__init__(*args, **kwarg)
         self.fields['name'].label = "Option"
         self.fields['q'].label="Question"
+
+class VideoForm(ModelForm):
+    class Meta:
+        model=Video
+        fields = ['title', 'url']
+
+    def __init__(self, *args, **kwarg):
+        super().__init__(*args, **kwarg)
+        self.fields['title'].label = "Title"
+        self.fields['url'].label="URL"
+
+class MemoForm(ModelForm):
+    class Meta:
+        model=MemoLecture
+        fields=['text']
+    def __init__(self, *args, **kwarg):
+        super().__init__(*args, **kwarg)
+        self.fields['text'].label = ""
+        self.fields['text'].widget.attrs = {
+            'class': 'form-control',
+            'placeholder': "write down memo and press save !",
+            'rows': 20
+        }

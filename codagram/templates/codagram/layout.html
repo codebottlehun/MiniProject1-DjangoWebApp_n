@@ -241,7 +241,8 @@
         });
 
         if ( window.location.pathname == '/codagram/' ){ 
-            //$("#sidebar-wrapper").css("width", "150px");
+            //오징!
+            $("#sidebar-wrapper").css("width", "150px");
             {% if request.user.is_authenticated %}
                 $("#sidebar-wrapper2").css("width", "300px");
             {% endif %}
@@ -265,7 +266,8 @@
             if(submenuHide == false){
                 if (event.originalEvent.wheelDelta >= 0) {
                     if ($("#sidebar-wrapper").css("width").replace('px','') < 100) {
-                        //$("#sidebar-wrapper").css("width", "150px");
+                        //오징!
+                        $("#sidebar-wrapper").css("width", "150px");
                         {% if request.user.is_authenticated %}
                             $("#sidebar-wrapper2").css("width", "300px");
                         {% endif %}

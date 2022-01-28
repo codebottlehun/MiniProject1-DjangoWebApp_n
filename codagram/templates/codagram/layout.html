@@ -178,7 +178,7 @@
                 <div id="sidebar-wrapper2" class="sticky-top" >
                     <div id="profileView-margin" style="height:100px;"></div>
                     
-                    <div class="card border-0 m-2 p-2" style="width: 300px; ">
+                    <div class="card border-0 m-2 p-2">
                         {% include "codagram/user_info.html" %}
                         {% include "member/profile.html" %}
 
@@ -324,7 +324,7 @@
         {% if request.user.is_authenticated %}
             if(submenuHide == false){
                 //$("#sidebar-wrapper").css("width", "150px");
-                $("#sidebar-wrapper2").css("width", "300px");
+                $("#sidebar-wrapper2").css("width", "400px");
             }
         {% endif %}
         var newpostClick = false;
@@ -361,7 +361,7 @@
                     if ($("#sidebar-wrapper").css("width").replace('px','') < 100) {
                         //$("#sidebar-wrapper").css("width", "150px");
                         {% if request.user.is_authenticated %}
-                            $("#sidebar-wrapper2").css("width", "300px");
+                            $("#sidebar-wrapper2").css("width", "400px");
                         {% endif %}
                     }
                 }

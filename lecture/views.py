@@ -22,7 +22,7 @@ def index(request):
     return render(request, 'lecture/index.html', context={'video_tuttor':videos_tuttor, 'videos_aibler':videos_aibler})
 
 def empty_page(request):
-    return HttpResponse('lecture/empty_page.html')
+    return render(request,'lecture/empty_page.html')
 
 def input_video(request):
     if request.method == "GET": 
@@ -58,16 +58,28 @@ def detail(request, qid):
     b=get_object_or_404(Question, id=qid)
     return render(request, 'lecture/vote_detail.html',{'q':b})
 
-def vote(request):
+def vote(request, q_id):
     if request.method == "POST" :
         c_id = request.POST.get('a')
-        c = get_object_or_404(Choice, id = c_id) 
-        c.votes += 1
-        c.save() 
-        return HttpResponseRedirect( reverse('lecture:result',args=(c.q.id ,)  ) )
+        if c_id != None:
+            c = get_object_or_404(Choice, id = c_id) 
+            c.votes += 1
+            c.save() 
+            return HttpResponseRedirect( reverse('lecture:result',args=(q_id ,)  ) )
+        else:
+
+            return HttpResponseRedirect( reverse('lecture:result',args=(q_id,)  ) )
+
 
 def result(request, q_id):
-    return render(request, 'lecture/vote_result.html', {'q' : get_object_or_404(Question, id = q_id) } )
+    # q = get_object_or_404(Question, id = q_id)
+    
+    q = Choice.objects.filter(q_id=q_id)
+    sum = 0
+    for c in q:
+        sum+=c.votes
+
+    return render(request, 'lecture/vote_result.html', context = {'q' : q , 'sum':sum} )
 
 def qregister(request):
     if request.method == "GET": 
@@ -109,10 +121,10 @@ def cdelete(request, c_id):
 chat
 '''
 
-@xframe_options_exempt
 def chat_room(request):
+    user = request.user.user_type
     return render(request, 'lecture/chat_room.html', {
-    'room_name': 1,
+    'room_name': 1, 'user':user
 })
 
 '''

@@ -16,8 +16,8 @@ urlpatterns = [
 
     path('identicon/image/<path:data>/', pydenticon_image, name='pydenticon_image'),
     path('', RedirectView.as_view(pattern_name='codagram:index'), name='root'),
-    re_path('', RedirectView.as_view(pattern_name='codagram:denine_404')),
-    
+
+    #re_path('', RedirectView.as_view(pattern_name='codagram:denine_404')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

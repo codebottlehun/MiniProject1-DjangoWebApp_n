@@ -16,10 +16,14 @@
 	<h1>Result</h1>
     <br>
     <hr>
-    <h3>{{q.name}}</h3>
+    <h3>{{q.name}}</h3><br>
 		<table class="table">
 			<tbody>
-				{% for c in q.choice_set.all %}
+				{% for c in q %}
+				<h3>{{c.name}} 득표율</h3>
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" style="width: calc(100%/({{sum}}/{{c.votes}}))" aria-valuenow="{{c.votes}}" aria-valuemin="0" aria-valuemax="100"></div>
+				</div><br>
 				<tr>
 					<td>{{c.name}} - {{c.votes}} 표</td>
 				</tr>
@@ -28,7 +32,7 @@
 		</table>
 
 	<form method="get" action="{% url 'lecture:vote_index' %}">
-		<button type="submit" class="btn btn-primary">back</button>
+		<button type="submit" class="btn btn-outline-primary" style="float: right;">뒤로가기</button>
 	</form>
 
 </body>

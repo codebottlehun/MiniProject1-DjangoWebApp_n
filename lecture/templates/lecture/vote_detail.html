@@ -13,7 +13,7 @@
 
 <body>
 
-    <form method="POST" action="{%url 'lecture:vote'%}">
+    <form method="POST" action="{%url 'lecture:vote' q.id%}">
 
         {%csrf_token%}
         <h1>{{q.name}}</h1><br>
@@ -35,18 +35,18 @@
             </table>
 
 
-            <div class="btn-group btn-group">
+            <div class="btn-group" style="float: right;">
 
             <form method="get">
-                <button type="submit" class="btn btn-primary">vote</button>
+                <button type="submit" class="btn btn-outline-primary" style="float: right; margin-right: 3px">투표 및 결과보기</button>
             </form>
 
             <form method="get" action="{% url 'lecture:qdelete' q.id %}">
-                <button type="submit" class="btn btn-primary">delete</button>
+                <button type="submit" class="btn btn-outline-primary" style="float: right; margin-right: 3px">투표 삭제</button>
             </form>
 
             <form method="get" action="{% url 'lecture:vote_index' %}">
-                <button type="submit" class="btn btn-primary">back</button>
+                <button type="submit" class="btn btn-outline-primary" style="float: right;">뒤로가기</button>
             </form>
 
             </div>

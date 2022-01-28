@@ -4,7 +4,7 @@
         <div class="ms-2" >
             {% if post.tags %}
                 {% for i in post.get_tag_list %}
-                    <a style="color:#1167b1; font-size:0.7em; font-weight:bolder;">[#{{i}}]&nbsp<a/>
+                    <a style="color:#1167b1; font-size:0.7em; font-weight:bolder;">[#{{ i }}] <a/>
                 {% endfor %}
             {% endif %}
         </div>

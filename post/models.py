@@ -1,7 +1,7 @@
 from email.policy import default
 from django.db import models
 from ckeditor.fields import RichTextField
-#from member.models import Users
+from tagging.fields import TagField
 from django.conf import settings
 
 class Post(models.Model):
@@ -12,16 +12,27 @@ class Post(models.Model):
     content = RichTextField()
     register_date = models.DateTimeField()
     solved = models.BooleanField(default=False)
+    tags = TagField()
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="like_posts", blank=True)
 
     def __str__(self):
         return self.subject
 
     @property
     def get_comment_cnt(self):
-
         cmt_cnt = Comment.objects.filter(post = self.pk)
-
         return len(cmt_cnt)
+
+    @property
+    def get_tag_list(self):
+        return self.tags.split(' ')
+
+    @property
+    def get_like_cnt(self):
+        return len(self.likes.all())
+
+    def is_like_user(self, user):
+        return self.likes.filter(pk=user.pk).exists()
 
     class Meta:
         ordering=['-register_date']
@@ -35,3 +46,4 @@ class Comment(models.Model):
     content = models.TextField(blank=True)
     register_date = models.DateTimeField()
     choice = models.BooleanField(default=False)
+    check = models.BooleanField(default=False)

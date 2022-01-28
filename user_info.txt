@@ -1,0 +1,13 @@
+id: bluesky, redsky, pinky, magnet, marvel, object, coffee, jeon
+id_tutor : kimtutor
+pwd: 1
+
+
+kimtutor / bluesky / redsky : 강의장에 Memo 데이터 가지고 있음
+
+jeon.jpg 파일이 media에 들어 있어야 이미지가 나올 것 입니다.
+
+-----강의 영상-----
+kimtutor 강의 영상 3개
+
+magnet 강의 영상 1개 object 강의 영상 2개

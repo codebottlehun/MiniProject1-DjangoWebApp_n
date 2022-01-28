@@ -34,9 +34,11 @@ def login(request) :
 
 def signup(request):
     if request.method == 'POST':
-        form = SignupForm(request.POST)
+        form = SignupForm(request.POST, request.FILES)
         if form.is_valid():
-            signed_user = form.save()
+            signed_user = form.save(commit=False)
+            signed_user.user_photo.name = signed_user.username + '.jpg'
+            signed_user.save()
             auth_login(request, signed_user)
             next_url = request.GET.get('next', '/')
             return redirect(next_url)
@@ -176,6 +178,7 @@ def check_alarm(request) :
         for c in comment :
             c.check = True
             c.save()
+    return redirect('codagram:index') # JeonSH 01.28 09:44
 
 def click_alarm(request) :
     source = alarm(request)

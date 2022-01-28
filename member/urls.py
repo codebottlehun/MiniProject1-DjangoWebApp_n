@@ -1,5 +1,7 @@
 from django.urls import path
 from member import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'member'
 
@@ -12,4 +14,4 @@ urlpatterns = [
     path('alarm/', views.alarm, name='alarm'),
     path('check_alarm/', views.check_alarm, name='check_alarm'),
     path('click_alarm/', views.click_alarm, name='click_alarm'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

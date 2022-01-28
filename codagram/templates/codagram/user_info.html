@@ -5,7 +5,12 @@
         <div class="align-items-center p-3 mx-2 border border-light rounded-top border-5" style="background-color:#F5F5F5">
             <div class="d-flex justify-content-between border-bottom border-secondary pb-2">
                 <div>
-                    <img src="{% url "pydenticon_image" request.user.username %}" class="rounded" style="width: 50px; height: 50px;" />
+                    {% if request.user.user_photo %}
+                        <img src="{{ request.user.user_photo.url }}" class="rounded" style="width: 50px; height: 50px;" />
+                    {% else %}
+                        <img src="{% url "pydenticon_image" request.user.username %}" class="rounded" style="width: 50px; height: 50px;" />
+                    {% endif %}
+                    
                 </div>
                 <div class="ms-2 mt-4">
                     <a class="text-decoration-none fw-bolder" style="color:rgb(0,0,0); font-size:1.0m;">

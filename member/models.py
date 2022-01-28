@@ -6,7 +6,7 @@ from post.models import Post, Comment
 class User(AbstractUser) :
     # user_type select opsion
     NATIONAL_CHOICES = (
-		(0, 'Aibler'),
+		(0, 'Aivler'),
         (1, 'Tutor'),
     )
     user_type = models.IntegerField(choices=NATIONAL_CHOICES, default=0) # user_type select form

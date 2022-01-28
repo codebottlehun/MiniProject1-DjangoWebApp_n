@@ -103,12 +103,10 @@
                                 </a>
 
                                 
-                                <ul id="dmenu" class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                                    
+                                <ul id="dmenu" class="dropdown-menu container-fluid" aria-labelledby="offcanvasNavbarDropdown">
                                     {% for item in video_tuttor %}
-                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'" style="font-size: 2; font-family: SBAggroB;"> -> {{ item.title }}</a></li>
+                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'" style="font-size: 2; font-family: SBAggroB;"> -> {{ item.title }} </a></li>
                                     {% endfor %}
-                                
                                 </ul>
                             </li>
                             <br>
@@ -123,7 +121,7 @@
                 
                                     {% for item in videos_aibler %}
                                     <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
-                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'" style="font-size: 2; font-family: SBAggroB;">{{ item.title }}</a></li>
+                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'" style="font-size: 2; font-family: SBAggroB;"> ->  {{ item.title }} </a></li>
                                     {% endfor %}
                                 
                                 </ul>

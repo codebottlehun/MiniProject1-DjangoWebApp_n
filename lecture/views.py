@@ -30,10 +30,10 @@ def input_video(request):
         form = VideoForm(request.POST)
         if form.is_valid():
             q = form.save(commit=False)
-
             '''
             url 입력시 embed url로 변환
             '''
+            q.user_type = request.user.user_type
             tmp_q = q.url
             tmp_q_spl = tmp_q.split('youtu.be')
             try:

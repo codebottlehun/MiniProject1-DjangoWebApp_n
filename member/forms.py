@@ -8,4 +8,4 @@ class SignupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ['email', 'username', 'user_type']
+        fields = ['username', 'user_photo', 'user_type']

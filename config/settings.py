@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     #'debug_toolbar',
     #third apps
     'django_extensions',
@@ -33,12 +34,14 @@ INSTALLED_APPS = [
     'bootstrap5',
     'embed_video', #lecture
     'channels',
+    'tagging.apps.TaggingConfig',
 
     #local apps
     'codagram',
     'member', # Jeon_SH
     'post', #JHS
     'lecture', #lecture
+    'tag', #JHS
 
 ]
 

@@ -1,53 +1,87 @@
 
 {% extends "codagram/layout.html" %}
+{% load post_tags %}
+
 {% block content %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/static/bootstrap-nav-paginator.min.js"></script>
 <div class="container mt-3">
   <div class="card", style="width:100%">
-    <div class="card bg-dark text-white">
+    <div class="card bg-light text-black">
       <div class="card-body">
-        <h4 class="card-title" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px">{{ post.subject }}</h4>
-        <div class="card-text" style="margin-left: 1%; margin-right: 1%; margin-top:1px; white-space: pre-line;">
+        <h4 class="card-title" id="head_card" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px">
+            {{ post.subject }}
+            <script>
+                let tags = "{{post.tags}}".split(',');
+                let tags_html ='';
+                for(var i=0; i<tags.length; i++){
+                    console.log(tags[i])
+                    tags_html += `<span class="badge bg-dark" style="margin-left:3px; padding:2px; font-size:5px; display:inline; fornt-size:0.5em; vertical-align:bottom">#${tags[i]}</span>`
+                }
+                document.getElementById("head_card").innerHTML += tags_html
+
+            </script>
+            <span id="progress_badge" class="badge rounded-pill bg-primary" style="float: right; display:inline; font-size:0.7em;">진행중</span>
+        </h4>
+        <div class="card-text" style="margin-left: 1%; margin-right: 1%; margin-top:1px; white-space: pre-line; overflow:auto; height:150px">
             {{post.description}}
         </div>
-        <div class="card-footer", style="text-align:right; font-size:0.8em">
-            
-            <div id="update">
-                <form action="{% url 'post:post_update' post.id%}" method="get" class="my-3" style="display:inline">
-                    {% csrf_token %}
-                    <!-- 오류표시 Start -->
-                    {% if form.errors %}
-                    <div class="alert alert-danger" role="alert">
-                    {% for field in form %}
-                        {% if field.errors %}
-                        <strong>{{ field.label }}</strong>
-                        {{ field.errors }}
-                        {% endif %}
-                    {% endfor %}
-                    </div>
+        <div class="row row-cols-2 card-footer align-content-center flex-wrap", style="font-size:0.8em; text-align:right;">
+            <div class="col-1 pt-1">
+                <div>
+                    {% if post|is_like_user:request.user %}
+                        <a href="{% url "post:dislike_post" post.pk %}" style="color: inherit;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="rgb(255,0,0)" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                        </a>
+                    {% else %}
+                        <a href="{% url "post:like_post" post.pk %}" style="color: inherit;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="rgb(255,0,0)" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                            </svg>
+                        </a>
                     {% endif %}
-                    
-                    <button type="submit" class="btn btn-primary" style="font-size:10px; padding:2px">게시글 수정하기</button>
-                    
-                </form>
-                <form action="{% url 'post:post_delete' post.id%}" method="get" class="my-3" style="display:inline">
-                    {% csrf_token %}
-                    <!-- 오류표시 Start -->
-                    {% if form.errors %}
-                    <div class="alert alert-danger" role="alert">
-                    {% for field in form %}
-                        {% if field.errors %}
-                        <strong>{{ field.label }}</strong>
-                        {{ field.errors }}
+                </div>
+            </div>
+            <div class="col-11">
+                <div id="update" style="display:inline;">
+                    <form action="{% url 'post:post_update' post.id%}" method="get" class="my-3" style="display:inline">
+                        {% csrf_token %}
+                        <!-- 오류표시 Start -->
+                        {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                        {% for field in form %}
+                            {% if field.errors %}
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
                         {% endif %}
-                    {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <button type="submit" class="btn btn-danger" style="font-size:10px; padding:2px">게시글 삭제하기</button>
-                    
-                </form>
-                <div style="display:inline">{{ post.register_date }}</div>
+                        
+                        <button id="post_update_btn" type="submit" class="btn btn-primary" style="font-size:10px; padding:2px">게시글 수정하기</button>
+                        
+                    </form>
+                    <form action="{% url 'post:post_delete' post.id%}" method="get" class="my-3" style="display:inline">
+                        {% csrf_token %}
+                        <!-- 오류표시 Start -->
+                        {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                        {% for field in form %}
+                            {% if field.errors %}
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <button id="post_delete_btn" type="submit" class="btn btn-danger" style="font-size:10px; padding:2px">게시글 삭제하기</button>
+                        
+                    </form>
+                </div>
+                <div style="display:inline;">{{ post.register_date }}</div>
             </div>
             <script>
                 if ("{{request.user.username}}" == "{{post.author}}"){
@@ -62,132 +96,119 @@
       </div>
     </div>
   </div>
-  <div class="border border-5">
-    <div class="row" style="height:400px">
-            <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%">
+  <div class="border border-2">
+    <div class="row" style="height:400px;">
+            <div class="col" style="flex: 0 1 auto; width:50%;">
                 <div style="margin-left:5%; margin-right:2%">
-                    <h5 class="border-bottom my-1 py-2" style="vertical-align:middle">
+                    <h5 class="border-bottom my-2 py-2" style="vertical-align:middle;">
                         문제 코드
                         <button id="comment_write" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comment" style="font-size:10px; padding:5px">
                             답변 등록하기
                         </button>
                     </h5>
-                    <div class="modal fade" id="comment">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-head" style="padding:10px">
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" style="float:right"></button>
-                                </div>
-                                <!-- Modal body -->
-                                <form action="{% url 'post:comment_create' post.id %}" method="post" class="my-3">
-                                    {% csrf_token %}
-                                    <!-- 오류표시 Start -->
-                                    {% if form.errors %}
-                                    <div class="alert alert-danger" role="alert">
-                                      {% for field in form %}
-                                        {% if field.errors %}
-                                          <strong>{{ field.label }}</strong>
-                                          {{ field.errors }}
-                                        {% endif %}
-                                      {% endfor %}
-                                    </div>
-                                    {% endif %}
-                                    <div class="modal-body">
-                                        <div class="row" style="height:100%%; ">
-                                            
-                                            <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%; ">
-                                                <h5 class="border-bottom my-3">수정해야하는 코드</h5>
-                                                <div class="form-group">
-                                                    <textarea name="content" id="content" class="form-control" rows="20" wrap="off"></textarea>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%;">
-                                                <h5 class="border-bottom my-3">수정한 코드 설명</h5>
-                                                <div class="form-group">
-                                                    <textarea name="description" id="description" class="form-control" rows="20" wrap="off"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-
-                                    <!-- Modal footer -->
-                                    <div class="modal-footer">
-                                        <input type="submit" value="답변등록" class="btn btn-primary" data-bs-dismiss="modal">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='code_content' style="margin-top:5%">{{ post.content|safe }}</div>
+                    <div class='code_content' style="margin-top:5%; overflow:auto; height:300px">{{ post.content|safe }}</div>
+                    
                 </div>
             </div>
             <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%">
                 <div style="margin-left:2%; margin-right:5%">
-                    <ul class="nav nav-tabs border-bottom" style="margin-top:0.5em">
-                        {% for comment in post.comment_set.all %}
-                            {% if forloop.first %}
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
-                                </li>
-                                <script>
-                                    document.querySelector('#{{comment.author}}').addEventListener(
-                                        'click',
-                                        () => {
-                                            const data = axios({
-                                                url: '/post/comment/get/',
-                                                method: 'get',
-                                                params: {
-                                                    username: "{{comment.author}}",
+                    
+                    <ul id="nav-tabs" class="nav nav-tabs border-bottom" style="margin-top:0.5em" id="my">
+                            {% for comment in comments %}
+                                {% if forloop.first %}
+                                    <li class="nav-item" id="{{forloop.counter0}}">
+                                        <a class="nav-link active" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
+                                        <div id="author" style="display:none">{{comment.author}}</div>
+                                        <script>
+                                            document.querySelector('#{{comment.author}}').addEventListener(
+                                                'click',
+                                                () => {
+                                                    const data = axios({
+                                                        url: '/post/comment/get/',
+                                                        method: 'get',
+                                                        params: {
+                                                            username: "{{comment.author}}",
+                                                            post_id: "{{post.id}}",
+                                                        }
+                                                    });
+                                                    data.then(function(result){
+                                                        let content = result.data[0]['content'];
+                                                        let description = result.data[0]['description'];
+                                                        let html = `${content}`;
+                                                        let html2 = `${description}`;
+                                                        document.getElementById('menu').innerHTML = html;
+                                                        document.getElementById('description2').innerHTML = html2;
+        
+                                                        let f = document.querySelector("#comment_form");
+                                                        let btn = document.querySelector("#comment_btn");
+                                                        
+                                                        if ("{{request.user.username}}" == "{{post.author}}"){
+                                                            f.action = "{% url 'post:select_comment' post.id comment.author%}";
+                                                            btn.innerText = '답변 채택하기';
+                                                        }
+                                                        else{
+                                                            if ("{{comment.author}}" == "{{request.user.username}}"){
+                                                                btn.innerText = '답변 삭제하기';
+                                                                btn.style.display = "block";
+                                                                f.action = "{% url 'post:comment_delete' post.id comment.author%}";
+                                                            }else{
+                                                                btn.style.display = "none";
+                                                            }
+                                                        }
+                                                    });  
                                                 }
-                                            });
-                                            data.then(function(result){
-                                                let content = result.data[0]['content'];
-                                                let description = result.data[0]['description'];
-                                                console.log(content)
-                                                console.log(description)
-                                                let html = `${content}`;
-                                                let html2 = `${description}`;
-                                                document.getElementById('menu').innerHTML = html;
-                                                document.getElementById('description2').innerHTML = html2;
-                                            });  
-                                        }
-                                    );
-                                </script>
-                            {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
-                                </li>
-                                <script>
-                                    document.querySelector('#{{comment.author}}').addEventListener(
-                                        'click',
-                                        () => {
-                                            const data = axios({
-                                                url: '/post/comment/get/',
-                                                method: 'get',
-                                                params: {
-                                                    username: "{{comment.author}}",
+                                            );
+                                        </script>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item" id="{{forloop.counter0}}">
+                                        <a class="nav-link" data-bs-toggle="tab" id="{{comment.author}}">{{comment.author}}</a>
+                                        <script>
+                                            document.querySelector('#{{comment.author}}').addEventListener(
+                                                'click',
+                                                () => {
+                                                    const data = axios({
+                                                        url: '/post/comment/get/',
+                                                        method: 'get',
+                                                        params: {
+                                                            username: "{{comment.author}}",
+                                                            post_id: "{{post.id}}",
+                                                        }
+                                                    });
+                                                    data.then(function(result){
+                                                        let content = result.data[0]['content'];
+                                                        let description = result.data[0]['description'];
+                                                        let html = `${content}`;
+                                                        let html2 = `${description}`;
+                                                        document.getElementById('menu').innerHTML = html;
+                                                        document.getElementById('description2').innerHTML = html2;
+        
+                                                        let f = document.querySelector("#comment_form");
+                                                        let btn = document.querySelector("#comment_btn");
+                                                        
+                                                        if ("{{request.user.username}}" == "{{post.author}}"){
+                                                            f.action = "{% url 'post:select_comment' post.id comment.author%}";
+                                                            btn.innerText = '답변 채택하기';
+                                                        }
+                                                        else{
+                                                            if ("{{comment.author}}" == "{{request.user.username}}"){
+                                                                btn.innerText = '답변 삭제하기';
+                                                                btn.style.display = "block";
+                                                                f.action = "{% url 'post:comment_delete' post.id comment.author%}";
+                                                            }else{
+                                                                btn.style.display = "none";
+                                                            }
+                                                        }
+                                                    });  
                                                 }
-                                            });
-                                            data.then(function(result){
-                                                let content = result.data[0]['content'];
-                                                let description = result.data[0]['description'];
-                                                console.log(content)
-                                                console.log(description)
-                                                let html = `${content}`;
-                                                let html2 = `${description}`;
-                                                document.getElementById('menu').innerHTML = html;
-                                                document.getElementById('description2').innerHTML = html2;
-                                            }); 
-                                        }
-                                    );
-                                </script>
-                            {% endif %}
-                        {% endfor %}
+                                            );
+                                        </script>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
                     </ul>
-
-                    <div class="tab-content" style="overflow:auto; width:100%">
+                    <script>document.querySelector("#nav-tabs").BsNavPaginator(4, "nav-link");</script>
+                    <div class="tab-content" style="width:100%; overflow:auto; height:300px">
                         <div class="tab-pane container active" style="white-space:pre-line; margin-top:2px; padding:0">
                             <p id='menu'>{{post.comment_set.all.0.content}}</p>
                         </div>
@@ -196,79 +217,119 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="comment">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-head" style="padding:10px">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" style="float:right"></button>
+                </div>
+                <!-- Modal body -->
+                <form action="{% url 'post:comment_create' post.id %}" method="post" class="my-3">
+                    {% csrf_token %}
+                    <!-- 오류표시 Start -->
+                    {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for field in form %}
+                        {% if field.errors %}
+                          <strong>{{ field.label }}</strong>
+                          {{ field.errors }}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="modal-body">
+                        <div class="row" style="height:100%%; overflow:auto;">
+                            
+                            <div class="col" style="flex: 0 1 auto;  width:50%; ">
+                                <h5 class="border-bottom my-3">수정해야하는 코드</h5>
+                                <div class="form-group">
+                                    <textarea name="content" id="content" class="form-control" rows="20" wrap="off"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="col" style="flex: 0 1 auto; overflow:auto; width:50%;">
+                                <h5 class="border-bottom my-3">수정한 코드 설명</h5>
+                                <div class="form-group">
+                                    <textarea name="description" id="description" class="form-control" rows="20" wrap="off"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <input id="comment_input" type="submit" value="답변등록" class="btn btn-primary" data-bs-dismiss="modal">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="card", style="width:100%;">
-        <div class="card bg-dark text-white">
+        <div class="card bg-light text-black">
             <div class="card-body" style="padding:1em; height:250px">
                 <h3 class="card-title" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px; display:inline">참여자 코드 해설</h3>
                 <form id="comment_form" method="post" class="my-2" style="display:inline">
                     {% csrf_token %}
                     <!-- 오류표시 Start -->
                     {% if form.errors %}
-                    <div class="alert alert-danger" role="alert">
-                    {% for field in form %}
-                        {% if field.errors %}
-                        <strong>{{ field.label }}</strong>
-                        {{ field.errors }}
-                        {% endif %}
-                    {% endfor %}
-                    </div>
+                        <div class="alert alert-danger" role="alert">
+                        {% for field in form %}
+                            {% if field.errors %}
+                                <strong>{{ field.label }}</strong>
+                                {{ field.errors }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
                     {% endif %}
                     
                     <button type="submit" class="btn btn-primary" id="comment_btn" style="font-size:12px; padding:7px; float:right">답변 채택하기</button>
                     
+                    
+                    <script>
+                        let comment_author = $("#author").text();
+                        let f = document.querySelector("#comment_form");
+                        let btn = document.querySelector("#comment_btn");
+                        {% for comment in post.comment_set.all %}
+                            if ("{{request.user.username}}" == "{{post.author}}"){
+                                f.action = "{% url 'post:select_comment' post.id comment.author%}";
+                                btn.innerText = '답변 채택하기';
+                            }
+                            else{
+                                if (comment_author == "{{request.user.username}}"){
+                                    btn.innerText = '답변 삭제하기';
+                                    btn.style.display = "block";
+                                    f.action = "{% url 'post:comment_delete' post.id comment.author%}";
+                                }else{
+                                    btn.style.display = "none";
+                                }
+                            }
+                        {% endfor %}
+                    </script>
+                    
                 </form>
                 <div class="card-text" style="margin-left: 2%; margin-right: 1%; margin-top:1px; white-space: pre-line;">
-                    <p id="description2">{{post.comment_set.all.0.description}}</p>
+                    <p id="description2" style="overflow:auto; height:150px; width:100%">{{post.comment_set.all.0.description}}</p>
                 </div>
-                <script>
-                    let f = document.querySelector("#comment_form")
-                    let btn = document.querySelector("#comment_btn")
-                    let comment_author = document.querySelector("#{{comment.author}}")
-                    if ("{{request.user.username}}" == "{{post.author}}"){
-                        
-                        let desc = $("#description2").text()
-                        console.log(desc)
-                        {% for comment in post.comment_set.all %}
-                            {% if comment.description != None%}
-                                console.log('a')
-                            {% endif %}
-                        {% endfor %}
-                        const data = axios({
-                            url: '/post/comment/get/',
-                            method: 'get',
-                            params: {
-                                username: "{{comment.author}}",
-                            }
-                        });
-                        data.then(function(result){
-                            let content = result.data[0]['content'];
-                            let description = result.data[0]['description'];
-                            console.log(content)
-                            console.log(description)
-                            let html = `${content}`;
-                            let html2 = `${description}`;
-                            document.getElementById('menu').innerHTML = html;
-                            document.getElementById('description2').innerHTML = html2;
-                        }); 
-                        /*% if(comment.description == desc){
-                            let author = "{{comment.author}}"
-                            console.log(author)
-                        }else{
-                            let author = "fuck"
-                        }
-                        console.log(author)*/
-                        f.action = "{% url 'post:select_comment' post.id post.author%}"
-                        btn.value = '답변 채택하기';
-                    }else{
-                        f.action = "{% url 'post:comment_delete' post.id post.author%}"
-                        btn.value = '답변 삭제하기';
-                    }
-                    console.log(f.action)
-    
-                </script>
+                
             </div>
         </div>
     </div>
+    {% if post.solved %}
+        <script>
+            const pb = document.getElementById("progress_badge");
+            pb.textContent = "완료";
+            pb.className = "badge rounded-pill bg-secondary";
 
+            const pub = document.getElementById("post_update_btn");
+            pub.style.display = 'none';
+            const cw = document.getElementById("comment_write");
+            cw.style.display = 'none';
+            const cb = document.getElementById("comment_btn");
+            cb.style.display = 'none';
+            const ci = document.getElementById("comment_input");
+            ci.style.display = 'none';
+        </script>
+    {% endif%}
 </div>
 {% endblock %}

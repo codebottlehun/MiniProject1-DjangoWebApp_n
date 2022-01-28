@@ -55,11 +55,8 @@
 
     <!-- 네비게이션바 -->
     <!-- 버튼 그룹이랑 합침 -->
-    <!-- <body style="background-color:#e3f2fd"> -->
     <body>
         
-
-
         <nav class="navbar navbar-light sticky-top justify-content-start" style="background-color: #e6e6fa">
             <div class="container-fluid">
             
@@ -108,19 +105,9 @@
                                 
                                 <ul id="dmenu" class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
                                     
-                
-
                                     {% for item in video_tuttor %}
-                                    <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
                                     <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'" style="font-size: 2; font-family: SBAggroB;"> -> {{ item.title }}</a></li>
                                     {% endfor %}
-
-                                    <!-- <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li> -->
-                                <!-- <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                                 
                                 </ul>
                             </li>
@@ -138,28 +125,13 @@
                                     <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
                                     <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'" style="font-size: 2; font-family: SBAggroB;">{{ item.title }}</a></li>
                                     {% endfor %}
-
-                                    <!-- <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li> -->
-                                <!-- <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                                 
                                 </ul>
                             </li>
                             </ul>
 
-                            <form class="d-flex">
-                            <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
-                            <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
-                            </form>
                         </div>
                     </div>
-
-                    <!-- <div class="container">
-                        <a class="navbar-brand text-center" href="#"><h5>Aivle</h5></a>
-                    </div> -->
 
                     <!-- 버튼 그룹 -->
 
@@ -169,7 +141,6 @@
                         <button id="btn_chat" onclick="resizeScreen(this.id)" type="button" class="btn btn-outline-primary" style="font-size: 1.5; font-family: SBAggroB;">전체채팅</button>
                         <button id="btn_vote" onclick="resizeScreen(this.id)" type="button" class="btn btn-outline-primary" style="font-size: 1.5; font-family: SBAggroB;">투표</button>
                         <button id="btn_memo" onclick="resizeScreen(this.id)" type="button" class="btn btn-outline-primary" style="font-size: 1.5; font-family: SBAggroB;">메모장</button>
-                        <!-- <button onclick="resizeScreen()" class="btn btn-primary btn-dark" type="button">Open</button> -->
                     </div>
 
                     <!-- Button trigger modal -->
@@ -179,24 +150,8 @@
                         </button>
                     </form>
                     
-                    
-
-                    <!-- <form method="get" action="{% url 'lecture:input_video' %}">
-                        <button type="submit" class="btn btn-primary" style="float: right; margin-right: 10px;">Upload Video Url</button>
-                    </form> -->
                 </div>
-                <!-- </nav>
                 
-                <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom justify-content-end"> -->
-                    <!-- 버튼 그룹 -->
-                    <!-- <div class="container-fluid ">
-                        
-
-                    </div> -->
-                
-                <!-- <div>
-                    <button onclick="resizeScreen()" class="btn btn-primary" type="button" style="margin-left: 10px; margin-right: 10px">Click!!</button>
-                </div> -->
             </div>
             </nav>
 
@@ -224,14 +179,7 @@
                         memoContainer.style.width = '30%';
                     }
                     
-                    // btnContainer.style.display = 'block';
                 }else{
-                    // videoContainer.style.width = '100%';
-                    // videoContainer.style.height = '100%'; 
-
-                    // voteContainer.style.display = 'none';
-                    // memoContainer.style.display = 'none';
-                    // chatContainer.style.display = 'none';
 
                     if(clicked_id=="btn_chat"){
                         voteContainer.style.display = 'none';
@@ -269,8 +217,6 @@
                             memoContainer.style.width = '30%';
                         }
                     }
-                    
-                    // btnContainer.style.display = 'none';
                 }
             }
         </script>
@@ -286,8 +232,6 @@
                             <div class="text-center h-100">
                                 <div class="w-100 h-100">
 
-                                    
-                                
                                     <!-- video 재생 화면 생성 -->
                                         <div class="w-100 h-100">
                                             
@@ -296,9 +240,6 @@
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                             allowfullscreen style="border: 3px solid rgba(13, 5, 119, 0.5);"></iframe>
 
-                                            <!-- <div class="d-flex justify-content-start">
-                                                {{ item.title}}
-                                            </div> -->
                                         </div> 
                                 
                                 </div>

@@ -41,7 +41,7 @@
                 <input id="chat-message-input" type="text" class="form-control" placeholder="chat here">
                 <div class="input-group-append">
                 <button id="chat-message-submit" class="btn btn-primary" type="button">Send</button>
-                {% if user == 0 %}
+                {% if user == 1 %}
                 <button id = "tutor" type="button" class="btn btn-outline-success" data-toggle="button" aria-pressed="false" autocomplete="off">
                     tutor
                 </button>
@@ -74,7 +74,7 @@
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             
-            if ({{user}} == 0 && isPressed) {
+            if ({{user}} == 1 && isPressed) {
                 document.querySelector('#chat-log2').value += ('[tutor] ' + data.message + '\n');
             } else if (data.message) {
                 document.querySelector('#chat-log').value += (data.message + '\n');
@@ -113,11 +113,8 @@
                 $("#tutor").attr('class', 'btn btn-success');
             }
             
-            if ({{user}} == 0) {
-                isPressed = !isPressed;
-            } else{
-                $("#not_tutor").modal('show');
-            } 
+            isPressed = !isPressed;
+            
         };
 
     })

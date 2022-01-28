@@ -9,10 +9,18 @@
   <div class="card", style="width:100%">
     <div class="card bg-light text-black">
       <div class="card-body">
-        <h4 class="card-title" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px">
+        <h4 class="card-title" id="head_card" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px">
             {{ post.subject }}
-            {{ post.tags }}
-                {% comment %} <span class="badge rounded-pill bg-primary" style="display:inline; fornt-size:0.5em; vertical-align:bottom">{{tag.name}}</span> {% endcomment %}
+            <script>
+                let tags = "{{post.tags}}".split(',');
+                let tags_html ='';
+                for(var i=0; i<tags.length; i++){
+                    console.log(tags[i])
+                    tags_html += `<span class="badge bg-dark" style="margin-left:3px; padding:2px; font-size:5px; display:inline; fornt-size:0.5em; vertical-align:bottom">#${tags[i]}</span>`
+                }
+                document.getElementById("head_card").innerHTML += tags_html
+
+            </script>
             <span id="progress_badge" class="badge rounded-pill bg-primary" style="float: right; display:inline; font-size:0.7em;">진행중</span>
         </h4>
         <div class="card-text" style="margin-left: 1%; margin-right: 1%; margin-top:1px; white-space: pre-line; overflow:auto; height:150px">
@@ -120,6 +128,7 @@
                                                         method: 'get',
                                                         params: {
                                                             username: "{{comment.author}}",
+                                                            post_id: "{{post.id}}",
                                                         }
                                                     });
                                                     data.then(function(result){
@@ -139,14 +148,10 @@
                                                         }
                                                         else{
                                                             if ("{{comment.author}}" == "{{request.user.username}}"){
-                                                                console.log('a')
                                                                 btn.innerText = '답변 삭제하기';
                                                                 btn.style.display = "block";
                                                                 f.action = "{% url 'post:comment_delete' post.id comment.author%}";
                                                             }else{
-                                                                console.log('b')
-                                                                console.log("{{comment.author}}")
-                                                                console.log("{{request.user.username}}")
                                                                 btn.style.display = "none";
                                                             }
                                                         }
@@ -167,6 +172,7 @@
                                                         method: 'get',
                                                         params: {
                                                             username: "{{comment.author}}",
+                                                            post_id: "{{post.id}}",
                                                         }
                                                     });
                                                     data.then(function(result){
@@ -186,14 +192,10 @@
                                                         }
                                                         else{
                                                             if ("{{comment.author}}" == "{{request.user.username}}"){
-                                                                console.log('a')
                                                                 btn.innerText = '답변 삭제하기';
                                                                 btn.style.display = "block";
                                                                 f.action = "{% url 'post:comment_delete' post.id comment.author%}";
                                                             }else{
-                                                                console.log('b')
-                                                                console.log("{{comment.author}}")
-                                                                console.log("{{request.user.username}}")
                                                                 btn.style.display = "none";
                                                             }
                                                         }
@@ -205,7 +207,7 @@
                                 {% endif %}
                             {% endfor %}
                     </ul>
-                    {% comment %} <script>document.querySelector("#nav-tabs").BsNavPaginator(4, "nav-link");</script> {% endcomment %}
+                    <script>document.querySelector("#nav-tabs").BsNavPaginator(4, "nav-link");</script>
                     <div class="tab-content" style="width:100%; overflow:auto; height:300px">
                         <div class="tab-pane container active" style="white-space:pre-line; margin-top:2px; padding:0">
                             <p id='menu'>{{post.comment_set.all.0.content}}</p>
@@ -295,12 +297,10 @@
                             }
                             else{
                                 if (comment_author == "{{request.user.username}}"){
-                                    console.log('a')
                                     btn.innerText = '답변 삭제하기';
                                     btn.style.display = "block";
                                     f.action = "{% url 'post:comment_delete' post.id comment.author%}";
                                 }else{
-                                    console.log('b')
                                     btn.style.display = "none";
                                 }
                             }

@@ -7,9 +7,22 @@
   <div class="card", style="width:100%">
     <div class="card bg-light text-black">
       <div class="card-body">
-        <h4 class="card-title" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px">
+        <h4 class="card-title" id="head_card" style="margin-left: 1%; margin-top:1%; margin-right: 1%; margin-bottom:1px">
             {{ post.subject }}
-            {{ post.tags }}
+            <script>
+                //console.log("{{post.tag}}")
+                let tags = "{{post.tag}}".split(',');
+                //console.log(tags)
+                let tags_html ='';
+                for(var i=0; i<tags.length; i++){
+                    console.log(tags[i])
+                    tags_html += `<span class="badge bg-dark" style="margin-left:3px; padding:2px; font-size:5px; display:inline; fornt-size:0.5em; vertical-align:bottom">#${tags[i]}</span>`
+                }
+                document.getElementById("head_card").innerHTML += tags_html
+
+            </script>
+            
+            {% comment %} <a href="{% url 'post:tag_cloud' %}"><i>[ TagCloud ]</i></a> {% endcomment %}
                 {% comment %} <span class="badge rounded-pill bg-primary" style="display:inline; fornt-size:0.5em; vertical-align:bottom">{{tag.name}}</span> {% endcomment %}
             <span id="progress_badge" class="badge rounded-pill bg-primary" style="float: right; display:inline; font-size:0.7em;">진행중</span>
         </h4>
@@ -99,6 +112,7 @@
                                                         method: 'get',
                                                         params: {
                                                             username: "{{comment.author}}",
+                                                            post_id: "{{post.id}}",
                                                         }
                                                     });
                                                     data.then(function(result){
@@ -146,6 +160,7 @@
                                                         method: 'get',
                                                         params: {
                                                             username: "{{comment.author}}",
+                                                            post_id: "{{post.id}}",
                                                         }
                                                     });
                                                     data.then(function(result){

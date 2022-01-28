@@ -12,7 +12,7 @@ class Post(models.Model):
     content = RichTextField()
     register_date = models.DateTimeField()
     solved = models.BooleanField(default=False)
-    tags = TagField()
+    tag = TagField()
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="like_posts", blank=True)
 
     def __str__(self):

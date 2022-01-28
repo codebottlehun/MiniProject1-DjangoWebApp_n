@@ -6,6 +6,7 @@ from django.utils import timezone
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
+
 def index(request):
     post_list = Post.objects.order_by('-register_date')
     context = { 'post_list': post_list }
@@ -27,15 +28,13 @@ def comment_create(request, post_id):
     author = request.user.username
     if request.method == 'POST':
         try:
-            comment = Comment.objects.get(author=author)
-            if request.method == "POST":
-                if request.POST.get('content')!=None:
-                    comment.content = request.POST.get('content')
-                if request.POST.get('description')!=None:
-                    comment.description = request.POST.get('description')
-                if request.POST.get('content')!=None or request.POST.get('description')!=None:
-                    comment.save()
-                    return redirect('post:detail', post_id=post.id)
+            comment = post.comment_set.get(author=author)
+            if request.POST.get('content')!=None:
+                comment.content = request.POST.get('content')
+            if request.POST.get('description')!=None:
+                comment.description = request.POST.get('description')
+            comment.save()
+            return redirect('post:detail', post_id=post.id)
         except:
             form = CommentForm(request.POST)
             if form.is_valid():
@@ -57,19 +56,9 @@ def post_create(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.user = request.user
-            #post.author = request.session['user_id'] JBH
             post.author = request.user.username
             post.register_date = timezone.now()
             post.save()
-
-            # tags = form.cleaned_data['tags'].split(',')
-            # for tag in tags:
-            #     if not tag:
-            #         continue
-            #     tag = tag.strip()
-            #     _tag, _ = Tag.objects.get_or_create(name=tag)
-
-            #     post.tags += _tag
             return redirect('post:index')
     else:
         form = PostForm()
@@ -107,7 +96,9 @@ def post_delete(request, post_id):
 
 def comment_get(request):
     author = request.GET.get('username')
-    c = Comment.objects.get(author=author)
+    post_id = request.GET.get('post_id')
+    post = get_object_or_404(Post, id=post_id)
+    c = post.comment_set.get(author=author)
     data=[]
     d = model_to_dict(c)
     data.append(d)
@@ -115,13 +106,13 @@ def comment_get(request):
 
 def comment_delete(request, post_id, author):
     post = Post.objects.get(id=post_id)
-    comment = Comment.objects.get(author=author)
+    comment = post.comment_set.get(author=author)
     comment.delete()
     return redirect('post:detail', post_id=post.id)
 
 def select_comment(request, post_id, author):
     post = get_object_or_404(Post, id=post_id)
-    comment = get_object_or_404(Comment, author=author)
+    comment = post.comment_set.get(author=author)
     if request.method=="POST":
         post.solved = True
         post.save()

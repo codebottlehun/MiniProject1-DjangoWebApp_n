@@ -2,12 +2,14 @@ from datetime import timedelta
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from post.models import Post 
+from post.models import Post, Comment
+from django.contrib.auth.decorators import login_required
 from member.views import my_paper, alarm
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from django.core.paginator import Paginator
 import json
+from django.conf import settings
     
 default_message = 'The page you are looking for might have been removed had its name changed or is temporarily unavailable.'
 onepagecnt = 10
@@ -36,7 +38,7 @@ def index(request):
     
     alarmlist = [];
     for i,c in enumerate(data):
-        if i<10 :
+        if i<100 :
             alarmlist.append(c)
 
     context.update({"alarm_list":alarmlist})
@@ -58,22 +60,15 @@ def denine_404(request, title = "404 - Page not found", msg = default_message):
 @csrf_exempt
 def postlist_new(request):
     page = json.loads(request.body)
-
-
     q = page.get('query', '')
-    print(q)
     post_all = ''
     if q:
         post_all = Post.objects.filter(subject__icontains=q)
-        print('검색')
     else:
         post_all = Post.objects.all()
-        print('미검색')
 
     page_num = int(page.get('paging_list')) + 1
-
     paginator = Paginator(post_all, onepagecnt) 
-    print(str(page_num) + "/" + str(paginator.num_pages))
 
     post_data = paginator.get_page(1).object_list
     if page_num < paginator.num_pages + 1:
@@ -87,3 +82,15 @@ def postlist_new(request):
         })
 
     return HttpResponse()
+
+@login_required
+def reset_alarm(request):
+    ob = Comment.objects.filter(user=request.user);
+
+    for i in ob:
+        print(i)
+        i.check = True
+        i.save()
+
+
+    return redirect('codagram:index')

@@ -6,7 +6,7 @@ django-bootstrap-v5
 django-pydenticon
 django-ckeditor
 django-embed-video
-
+django-tagging
 
 pillow
 easy-thumbnails

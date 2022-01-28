@@ -12,7 +12,7 @@ class Post(models.Model):
     content = RichTextField()
     register_date = models.DateTimeField()
     solved = models.BooleanField(default=False)
-    tag = TagField()
+    tags = TagField()
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="like_posts", blank=True)
 
     def __str__(self):
@@ -20,10 +20,19 @@ class Post(models.Model):
 
     @property
     def get_comment_cnt(self):
-
         cmt_cnt = Comment.objects.filter(post = self.pk)
-
         return len(cmt_cnt)
+
+    @property
+    def get_tag_list(self):
+        return self.tags.split(' ')
+
+    @property
+    def get_like_cnt(self):
+        return len(self.likes.all())
+
+    def is_like_user(self, user):
+        return self.likes.filter(pk=user.pk).exists()
 
     class Meta:
         ordering=['-register_date']

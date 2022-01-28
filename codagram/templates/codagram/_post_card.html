@@ -1,52 +1,58 @@
-
-
-<div class="m-2 mb-5">
-    <div class="rounded-end bg-light p-3">
+{% load humanize %}
+<div class="mt-2 mb-5">
+    <div class="rounded-end bg-light px-3 py-3">
+        <div class="ms-2" >
+            {% if post.tags %}
+                {% for i in post.get_tag_list %}
+                    <a style="color:#1167b1; font-size:0.7em; font-weight:bolder;">[#{{i}}]&nbsp<a/>
+                {% endfor %}
+            {% endif %}
+        </div>
         <div class="d-flex" >
             <div>
             {% if post.solved %}
-                <h5><span class="badge bg-success" style="font-family: basic"> 완료 </span></h5>
+                <h5><span class="badge bg-success" style="font-family: basic"> Solved </span></h5>
             {% else %}
-                <h5><span class="badge bg-secondary"> 진행중 </span></h5>
+                <h5><span class="badge bg-warning"> Open </span></h5>
             
                 {% endif %}
             </div>
-            <div class="ms-2 pt-1" >
-                <a href="{% url 'post:detail' post.id %}" class="text-decoration-none" style="color:black; font-size:1em; font-weight:bolder;">
+            <div class="ms-2 fw-bolder" >
+                <a href="{% url 'post:detail' post.id %}" class="text-decoration-none" style="color:black; font-size:1.3em;">
                     {{ post.subject }} 
                 </a>
             </div>
-            <div class="ms-2" >
-                {% for i in 12345|make_list %}
-                    <a style="color:#1167b1; font-size:0.7em; font-weight:bolder;">#Tag{{i}}<a/>
-                {% endfor %}
+            <div class="ms-2 pt-1 fw-bolder" >
+                <a href="{% url 'post:detail' post.id %}" class="text-decoration-none" style="color:black; font-size:1em;">
+                    #{{ post.pk }} 
+                </a>
             </div>
             <div class="ms-auto" >
-                <img src="{{ post.user.user_photo_url }}" style="width: 32px; height: 32px;" />
-                <a> {{ post.user.username }} </a>
+                <a class="me-2 fw-bolder text-decoration-none" style="color:#000000"> {{ post.user.username }} </a>
+                <img src="{{ post.user.user_photo_url }}" class="rounded-circle"style="width: 32px; height: 32px;" />
             </div>
         </div>
 
-        <div class="d-flex mt-4 mb-2" >
+        <div class="d-flex mt-4 mb-2 mx-2" >
             <a style="color:rgb(100,100,100);">
                 {{ post.description }}
             </a>
         </div>
 
-        <div class="d-flex border-top pt-3" >
-            <div>
-                {{ post.register_date }}
+        <div class="d-flex border-top pt-3 fw-bolder" >
+            <div style="color:#585858">
+                {{ post.register_date|naturaltime }}
             </div>
-            <div class="ms-auto">
+            <div class="ms-auto fw-bolder me-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(50, 50, 50)" class="bi bi-person-fill mb-1" viewBox="0 0 16 16">
                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                 </svg>
                 {{ post.get_comment_cnt }}
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="rgb(80, 80, 80)" class="bi bi-person-fill ms-2 mb-1" viewBox="0 0 16 16">
-                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>                    
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="rgb(255,0,0)" class="bi bi-heart-fill ms-2" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                 </svg>
-                486
+                {{ post.get_like_cnt }}
             </div>
         </div>
     </div>

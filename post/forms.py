@@ -14,7 +14,7 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
   class Meta:
     model = Post
-    fields = ['subject', 'description', 'content', 'tag']
+    fields = ['subject', 'description', 'content', 'tags']
     widgets = {
         'subject': TextInput(attrs={
             'class':'form-control',
@@ -31,5 +31,5 @@ class PostForm(forms.ModelForm):
       'subject': '제목',
       'description': '설명',
       'content': '코드',
-      'tag':'태그',
+      'tags':'태그',
     }

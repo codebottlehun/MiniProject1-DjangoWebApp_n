@@ -5,7 +5,9 @@ from .models import Post, Comment
 from django.utils import timezone
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
+from member.views import alarm
+import json
 
 def index(request):
     post_list = Post.objects.order_by('-register_date')
@@ -13,12 +15,24 @@ def index(request):
     return render(request, 'post/post_list.html', context)
 
 def detail(request, post_id):
+    # Alarm info. JBH
+    context = {}
+    source = alarm(request)
+    data = json.loads(source.content)
+    
+    alarmlist = [];
+    for i,c in enumerate(data):
+        if i<100 :
+            alarmlist.append(c)
+
+    context.update({"alarm_list":alarmlist})
+
     post = get_object_or_404(Post, id=post_id)
     comments = Comment.objects.filter(post_id=post_id).order_by("-choice")
-    context = { 
+    context.update({ 
         'post': post,
         'comments':comments,
-    }
+    })
     return render(
         request, 'post/post_detail.html', context)
 
@@ -27,14 +41,25 @@ def comment_create(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     author = request.user.username
     if request.method == 'POST':
+        context = {}
+        source = alarm(request)
+        data = json.loads(source.content)
+        
+        alarmlist = [];
+        for i,c in enumerate(data):
+            if i<100 :
+                alarmlist.append(c)
+
+        context.update({"alarm_list":alarmlist})
         try:
             comment = post.comment_set.get(author=author)
             if request.POST.get('content')!=None:
                 comment.content = request.POST.get('content')
             if request.POST.get('description')!=None:
                 comment.description = request.POST.get('description')
-            comment.save()
-            return redirect('post:detail', post_id=post.id)
+            if request.POST.get('content')!=None or request.POST.get('description')!=None:
+                comment.save()
+            return redirect('post:detail', context)
         except:
             form = CommentForm(request.POST)
             if form.is_valid():
@@ -51,6 +76,19 @@ def comment_create(request, post_id):
 
 @login_required
 def post_create(request):
+
+    # Alarm info. JBH
+    context = {}
+    source = alarm(request)
+    data = json.loads(source.content)
+    
+    alarmlist = [];
+    for i,c in enumerate(data):
+        if i<100 :
+            alarmlist.append(c)
+
+    context.update({"alarm_list":alarmlist})
+
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -59,14 +97,26 @@ def post_create(request):
             post.author = request.user.username
             post.register_date = timezone.now()
             post.save()
-            return redirect('post:index')
+            return redirect('codagram:index')
     else:
         form = PostForm()
-    context = {'form': form}
+    context.update({'form': form}) 
     return render(request, 'post/post_form.html', context)
 
 @login_required
 def post_update(request, post_id):
+    # Alarm info. JBH
+    context = {}
+    source = alarm(request)
+    data = json.loads(source.content)
+    
+    alarmlist = [];
+    for i,c in enumerate(data):
+        if i<100 :
+            alarmlist.append(c)
+
+    context.update({"alarm_list":alarmlist})
+
     post = get_object_or_404(Post, id=post_id)
     if post.author == request.user.username:
         if request.method == 'POST':
@@ -80,10 +130,10 @@ def post_update(request, post_id):
                     return render(request, 'post:post_update', post_id=post.id)
             
         form = PostForm(initial={'subject':post.subject, 'description':post.description, 'content':post.content})
-        context = {
+        context.update({
             'form':form,
             'post':post,
-        }
+        })
         return render(request, 'post/post_form_update.html', context)
     else:
         return redirect('post:detail', post_id=post.id)
@@ -92,7 +142,7 @@ def post_update(request, post_id):
 def post_delete(request, post_id):
     post = Post.objects.get(id=post_id)
     post.delete()
-    return redirect('post:index')
+    return redirect('codagram:index')
 
 def comment_get(request):
     author = request.GET.get('username')
@@ -123,7 +173,16 @@ def select_comment(request, post_id, author):
 @login_required
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if request.user in post.like_users.all():
-        post.like_users.remove(request.user)
-    else:
-        post.like_users.add(request.user)
+    post.likes.add(request.user)
+    messages.success(request, "해당 게시물에 좋아요를 눌렀습니다.")
+    redirect_url = request.META.get("HTTP_REFERER", "root")
+    return redirect(redirect_url)
+
+
+@login_required
+def dislike_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.likes.remove(request.user)
+    messages.success(request, "해당 게시물에 좋아요를 취소하였습니다.")
+    redirect_url = request.META.get("HTTP_REFERER", "root")
+    return redirect(redirect_url)

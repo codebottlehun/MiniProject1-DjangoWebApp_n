@@ -18,7 +18,6 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>No</th>
                     <th>Title</th>
                     <th>Date</th>
                     <th></th>
@@ -27,28 +26,24 @@
             {% for q in a %}
             <tbody>
                 <tr>
-                    <td>{{q.id}}</td>
-                    <td>{{q.name}}</td>
-                    <td>{{q.date}}</td>
                     <td>
-                        <form method="get" action="{% url 'lecture:detail' q.id %}">
-                            <button type="submit" class="btn btn-primary">more</button>
-                        </form>
+                        <a href="{% url 'lecture:detail' q.id %}">{{q.name}}</a>
                     </td>
+                    <td>{{q.date}}에 등록</td>
                 </tr>
                 <tr>
             </tbody>
             {% endfor %}
         </table>
         
-        <div class="btn-group btn-group">
+        <div class="btn-group" style="float: right;">
 
             <form method="get" action="{% url 'lecture:qregister' %}">
-                <button type="submit" class="btn btn-primary">new</button>
+                <button type="submit" class="btn btn-outline-primary" style="float: right; margin-right: 3px">새 투표 등록</button>
             </form>
 
             <form method="get" action="{% url 'lecture:cregister' %}">
-                <button type="submit" class="btn btn-primary">option</button>
+                <button type="submit" class="btn btn-outline-primary" style="float: right;">투표 항목 등록</button>
             </form>
         </div>
 

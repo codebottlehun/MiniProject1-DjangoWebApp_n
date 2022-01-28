@@ -8,6 +8,20 @@
         width: 100%;
         height: 95%;
     }
+
+    @font-face {
+        font-family: '-KITA-Regular';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/-KITA-Regular.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'SBAggroB';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
 </style>
 
 
@@ -41,12 +55,12 @@
 
     <!-- 네비게이션바 -->
     <!-- 버튼 그룹이랑 합침 -->
-    <body style="background-color:#e3f2fd">
-
+    <!-- <body style="background-color:#e3f2fd"> -->
+    <body>
         
 
 
-        <nav class="navbar navbar-light sticky-top justify-content-start" style="background-color: #e3f2fd;">
+        <nav class="navbar navbar-light sticky-top justify-content-start" style="background-color: #e6e6fa">
             <div class="container-fluid">
             
                 <div class="container-fluid">
@@ -59,7 +73,7 @@
                     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                         <div class="offcanvas-header">
                             <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
-
+                                <br>
                                 <a
                                     href="{% url "codagram:index" %}"
                                     class="d-flex align-items-center text-dark text-decoration-none">
@@ -85,17 +99,10 @@
                         </div>
                         <div class="offcanvas-body">
                             <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
-                            <li class="nav-item">
-                                
-                                <!-- <a class="nav-link active" aria-current="page" href="/codagram/">Codagram Home</a> -->
-                            </li>
-                            <li class="nav-item">
-
-                                <!-- <a class="nav-link" href="#">Link</a> -->
-                            </li>
+                            <br><br>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:2em; margin-top: 10px; text-align: center; color: black;">
-                                    튜터 강의
+                                    튜터 강의장
                                 </a>
 
                                 
@@ -105,7 +112,7 @@
 
                                     {% for item in video_tuttor %}
                                     <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
-                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'">{{ item.title }}</a></li>
+                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'" style="font-size: 2; font-family: SBAggroB;"> -> {{ item.title }}</a></li>
                                     {% endfor %}
 
                                     <!-- <li><a class="dropdown-item" href="#">Action</a></li>
@@ -117,20 +124,19 @@
                                 
                                 </ul>
                             </li>
-
+                            <br>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:2em; margin-top: 10px; text-align: center; color: black;">
-                                    자유 강의
+                                    자유 강의장
                                 </a>
 
                                 
                                 <ul id="dmenu" class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
                                     
                 
-
                                     {% for item in videos_aibler %}
                                     <!-- <li><a class="dropdown-item" href="./?{{ item.id}}">{{ item.title }}</a></li> -->
-                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'">{{ item.title }}</a></li>
+                                    <li><a class="btn dropdown-item" onclick="document.getElementById('video_main').src='{{ item.url }}'" style="font-size: 2; font-family: SBAggroB;">{{ item.title }}</a></li>
                                     {% endfor %}
 
                                     <!-- <li><a class="dropdown-item" href="#">Action</a></li>
@@ -143,30 +149,6 @@
                                 </ul>
                             </li>
                             </ul>
-
-                            <script>
-                                // $('.dmenu').each(function(){
-                                //     // let today = new Date();   
-                                //     // let month = today.getMonth()+1
-                                //     // let day = today.getDate()
-                                //     // return month+"월 "+day+"일"
-                                //     var titles= videos.title
-                                //     const li = document.createElement("li");
-                                //     li.setAttribute('id',titles[0])
-
-                                //     const textNode = document.createTextNode(titles[0])
-                                //     li.appendChild(textNode)
-
-                                //     document.getElementById('dmenu').appendChild(li)
-                                // });
-
-                                // function action_add(){
-                                //     var tmp = 123
-                                //     var dmenu = $("#dmenu");
-                                //     dmenu.append("<li>"+tmp+"</li>");
-                                // }
-                                
-                            </script>
 
                             <form class="d-flex">
                             <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
@@ -183,16 +165,16 @@
 
                     
 
-                    <div id="btngroup" class="btn-group" style="float:right; ">
-                        <button id="btn_chat" onclick="resizeScreen(this.id)" type="button" class="btn btn-primary">Chat</button>
-                        <button id="btn_vote" onclick="resizeScreen(this.id)" type="button" class="btn btn-primary">Vote</button>
-                        <button id="btn_memo" onclick="resizeScreen(this.id)" type="button" class="btn btn-primary">Memo</button>
+                    <div id="btngroup" class="btn-group" style="float:right;">
+                        <button id="btn_chat" onclick="resizeScreen(this.id)" type="button" class="btn btn-outline-primary" style="font-size: 1.5; font-family: SBAggroB;">전체채팅</button>
+                        <button id="btn_vote" onclick="resizeScreen(this.id)" type="button" class="btn btn-outline-primary" style="font-size: 1.5; font-family: SBAggroB;">투표</button>
+                        <button id="btn_memo" onclick="resizeScreen(this.id)" type="button" class="btn btn-outline-primary" style="font-size: 1.5; font-family: SBAggroB;">메모장</button>
                         <!-- <button onclick="resizeScreen()" class="btn btn-primary btn-dark" type="button">Open</button> -->
                     </div>
 
                     <!-- Button trigger modal -->
                     <form method="get" action="{% url 'lecture:input_video' %}"></form>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; margin-right: 10px;">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right; margin-right: 10px; background-color: black; font-family: -KITA-Regular;">
                             Upload Video Url
                         </button>
                     </form>
@@ -219,10 +201,6 @@
             </nav>
 
         <script>
-
-            function url_send(){
-
-            }
 
             // 화면 비율 변경 코드
             function resizeScreen(clicked_id) {
@@ -251,13 +229,13 @@
                     // videoContainer.style.width = '100%';
                     // videoContainer.style.height = '100%'; 
 
-                    voteContainer.style.display = 'none';
-                    memoContainer.style.display = 'none';
-                    chatContainer.style.display = 'none';
+                    // voteContainer.style.display = 'none';
+                    // memoContainer.style.display = 'none';
+                    // chatContainer.style.display = 'none';
 
                     if(clicked_id=="btn_chat"){
-                        // voteContainer.style.display = 'none';
-                        // memoContainer.style.display = 'none';
+                        voteContainer.style.display = 'none';
+                        memoContainer.style.display = 'none';
                         if(chatContainer.style.width == '30%'){
                             chatContainer.style.display = 'none';
                             videoContainer.style.width = '100%';
@@ -269,8 +247,8 @@
                     }else if(clicked_id=="btn_vote"){
                         voteContainer.style.display = 'block';
                         voteContainer.style.width = '30%';
-                        // chatContainer.style.display = 'none';
-                        // memoContainer.style.display = 'none';
+                        chatContainer.style.display = 'none';
+                        memoContainer.style.display = 'none';
                         if(voteContainer.style.width == '30%'){
                             voteContainer.style.display = 'none';
                             videoContainer.style.width = '100%';
@@ -280,8 +258,8 @@
                             voteContainer.style.width = '30%';
                         }
                     }else if(clicked_id=="btn_memo"){
-                        // chatContainer.style.display = 'none';
-                        // voteContainer.style.display = 'none';
+                        chatContainer.style.display = 'none';
+                        voteContainer.style.display = 'none';
                         if(memoContainer.style.width == '30%'){
                             memoContainer.style.display = 'none';
                             videoContainer.style.width = '100%';
@@ -316,7 +294,8 @@
                                             <iframe id="video_main" width="100%" height="100%" src='/lecture/empty_page/'
                                             title="YouTube video player" frameborder="0" 
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                            allowfullscreen></iframe>
+                                            allowfullscreen style="border: 3px solid rgba(13, 5, 119, 0.5);"></iframe>
+
                                             <!-- <div class="d-flex justify-content-start">
                                                 {{ item.title}}
                                             </div> -->
@@ -328,13 +307,13 @@
                     </div>
                     
                     <!-- 오른쪽 등장 화면 각 버튼 기능 -->
-                        <div id="chat" class="col-0 w-0 h-100 mx-0 my-0" style="display:none">
+                        <div id="chat" class="col-0 w-0 h-100 mx-0 my-0" style="display:none; border: 3px solid rgb(174, 227, 247);">
                             <iframe src='/lecture/chat/' width='100%' height='100%'> </iframe>
                         </div>
-                        <div id="vote" class="col-0 w-0 h-100 mx-0 my-0" style="display:none">
+                        <div id="vote" class="col-0 w-0 h-100 mx-0 my-0" style="display:none; border: 3px solid rgb(174, 227, 247);">
                             <iframe src='/lecture/index/' width='100%' height='100%'> </iframe>
                         </div>
-                        <div id="memo" class="col-0 w-0 h-100 mx-0 my-0" style="display:none">
+                        <div id="memo" class="col-0 w-0 h-100 mx-0 my-0" style="display:none; border: 3px solid rgb(174, 227, 247);">
 
                             <iframe src='/lecture/memo/' width='100%' height='100%'> </iframe>
 

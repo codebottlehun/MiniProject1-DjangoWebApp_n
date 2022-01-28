@@ -10,8 +10,6 @@ from datetime import datetime
 from .models import Room,Message,MemoLecture
 from django.http import HttpResponse, JsonResponse
 
-# Create your views here.
-
 '''
 video 관련 view
 '''
@@ -72,8 +70,6 @@ def vote(request, q_id):
 
 
 def result(request, q_id):
-    # q = get_object_or_404(Question, id = q_id)
-    
     q = Choice.objects.filter(q_id=q_id)
     sum = 0
     for c in q:
@@ -106,8 +102,6 @@ def cregister(request):
         form = ChoiceForm(request.POST)
         if form.is_valid():
             c = form.save()
-            # return HttpResponseRedirect(reverse('vote:detail', args=(c.q.id,)))
-            # return HttpResponseRedirect(reverse('vote:index'))
             return HttpResponseRedirect(reverse('lecture:cregister'))
         else: 
             return render(request, 'lecture/vote_cregister.html',{'f':form, 'error':'유효하지않은 값입니다'})
@@ -137,9 +131,6 @@ def memo(request):
         except MemoLecture.DoesNotExist :
             model = MemoLecture.objects.create(user=request.user)
 
-        # text = ''
-        # for i in model:
-        #     text += i.text + '\n'
         form = MemoForm(initial={'text' : model.text})
         return render(request, 'lecture/memo.html', {'f':form})
     elif request.method == "POST":

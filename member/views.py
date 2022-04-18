@@ -37,7 +37,8 @@ def signup(request):
         form = SignupForm(request.POST, request.FILES)
         if form.is_valid():
             signed_user = form.save(commit=False)
-            signed_user.user_photo.name = signed_user.username + '.jpg'
+            if signed_user.user_photo :
+                signed_user.user_photo.name = signed_user.username + '.jpg'
             signed_user.save()
             auth_login(request, signed_user)
             next_url = request.GET.get('next', '/')
